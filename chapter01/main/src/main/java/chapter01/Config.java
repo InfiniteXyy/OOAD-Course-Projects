@@ -38,5 +38,8 @@ public class Config {
     public static Config createDemoConfig() throws Exception {
         return new Config(300, 5, Arrays.asList(30, 80, 110, 160, 250));
     }
+    public static Config createConfig(int stickLength, int antVelocity, List<Integer> antPositions) throws Exception {
+        return new Config(stickLength, antVelocity, antPositions);
+    }
 
 }

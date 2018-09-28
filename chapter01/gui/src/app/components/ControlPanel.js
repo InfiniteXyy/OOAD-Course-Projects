@@ -1,5 +1,5 @@
 import React from 'react';
-import { message, Button } from 'antd';
+import { Button } from 'antd';
 import propTypes from 'prop-types';
 
 export default class ControlPanel extends React.Component {

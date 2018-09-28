@@ -70,10 +70,10 @@ export default class SettingPanel extends React.Component {
       </Menu>
     );
     return (
-      <div style={{ display: 'flex', alignItems: 'center', marginTop: 10 }}>
+      <div key={index.toString()} style={{ display: 'flex', alignItems: 'center', marginTop: 10 }}>
         <b style={{ flex: 1 }}>{index + 1 + ': '}</b>
         <span style={{ flex: 2 }}>方向</span>
-        <Dropdown overlay={menu} trigger="click">
+        <Dropdown overlay={menu} trigger={['click']}>
           <Button size={'small'} style={{ flex: 2, marginRight: 10 }}>
             {ant.direction !== 1 ? '左侧' : '右侧'}
           </Button>

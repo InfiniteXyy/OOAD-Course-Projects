@@ -1,15 +1,22 @@
-from http.server import HTTPServer, SimpleHTTPRequestHandler
+from http.server import HTTPServer, BaseHTTPRequestHandler
+import json
 
 
-class AntRequestHandler(SimpleHTTPRequestHandler):
-    def do_GET(self):
+class AntRequestHandler(BaseHTTPRequestHandler):
+    def _set_headers(self):
         self.send_response(200)
+        self.send_header('Content-type', 'application/json')
         self.end_headers()
-        self.wfile.write(b'Hello World')
 
-    def end_headers (self):
-        self.send_header('Access-Control-Allow-Origin', '*')
-        SimpleHTTPRequestHandler.end_headers(self)
+    def do_GET(self):
+        self._set_headers()
+        self.wfile.write(b'{"a": 1}')
 
-httpd = HTTPServer(('localhost', 2616), AntRequestHandler)
-httpd.serve_forever()
+
+def main():
+    httpd = HTTPServer(('', 8000), AntRequestHandler, HTTPServer)
+    httpd.serve_forever()
+
+
+if __name__ == '__main__':
+    main()
