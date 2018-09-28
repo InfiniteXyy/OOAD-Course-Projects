@@ -1,0 +1,43 @@
+{
+  "name": "ant-native",
+  "version": "0.1.0",
+  "main": "public/main.js",
+  "homepage": "./",
+  "private": true,
+  "dependencies": {
+    "antd": "^3.9.3",
+    "electron-is-dev": "^1.0.1",
+    "prop-types": "^15.6.2",
+    "react": "^16.5.2",
+    "react-anime": "^2.2.0",
+    "react-dom": "^16.5.2",
+    "react-scripts": "1.1.5"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "electron-start": "electron .",
+    "electron-dev": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\"",
+    "preelectron-pack": "yarn build",
+    "electron-pack": "build -c.extraMetadata.main=build/main.js"
+  },
+  "devDependencies": {
+    "concurrently": "^4.0.1",
+    "electron": "^3.0.0",
+    "electron-builder": "^20.28.4",
+    "prettier": "^1.14.3",
+    "wait-on": "^3.0.1"
+  },
+  "build": {
+    "appId": "cn.infinitex.ant",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    }
+  }
+}

@@ -4,7 +4,6 @@ import java.util.*;
 import java.util.stream.IntStream;
 
 public class CreepingGame {
-    private Stick stick;
     private static Random random = new Random();
     private Config config;
 
@@ -20,7 +19,7 @@ public class CreepingGame {
             ants.add(new Ant(v, p));
         }
         // set stick
-        stick = new Stick(config.getStickLength());
+        Stick stick = new Stick(config.getStickLength());
         stick.setAnts(ants);
         stick.initDirection(directions);
 
