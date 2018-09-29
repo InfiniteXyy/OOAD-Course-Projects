@@ -2,7 +2,6 @@ package chapter01;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class Main {
@@ -19,13 +18,12 @@ public class Main {
 
   private static void runGame(Config config) throws Exception {
     CreepingGame game = new CreepingGame(config);
-    List<Integer> stepList = game.getAllSituationSteps();
-    System.out.println("max: " + Collections.max(stepList) + " min: " + Collections.min(stepList));
+    game.getAllSituationSteps();
   }
 
 
   public static void main(String[] args) throws Exception {
-    String gameType = args[0] == null ? "null" : args[0];
+    String gameType = args.length == 0 ? "null" : args[0];
     switch (gameType) {
       case "demo": {
         Config config = Config.createDemoConfig();

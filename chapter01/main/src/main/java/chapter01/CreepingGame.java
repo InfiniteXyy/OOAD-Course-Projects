@@ -1,6 +1,7 @@
 package chapter01;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -27,12 +28,14 @@ public class CreepingGame {
     stick.initDirection(directions);
 
     // start
+    System.out.println("directions: " + Arrays.toString(directions));
     int step = 0;
     while (stick.hasAnt()) {
       stick.nextFrame();
-      // stick.printFrame();
+      stick.printFrame();
       step++;
     }
+    System.out.println("step: " + step + "\n");
     return step;
   }
 

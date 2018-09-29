@@ -1,5 +1,10 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
+from pathlib import Path
 import json
+import os
+from reader import *
+
+parent_path = Path(os.getcwd()).parent
 
 
 class AntRequestHandler(BaseHTTPRequestHandler):
@@ -10,7 +15,30 @@ class AntRequestHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         self._set_headers()
-        self.wfile.write(b'{"a": 1}')
+        os.system('../main/gradlew -p ../main run --args="demo" -q > tmp')
+        gameList = readTempData()
+        stages = []
+        maxStep = 0
+        minStep = 100000
+        for i in gameList:
+            singleGameData = {}
+            singleGameData['directions'] = i.get_directions()
+            step = i.get_steps()
+            singleGameData['steps'] = step
+            maxStep = max([maxStep, step])
+            minStep = min([minStep, step])
+            singleGameData['positions'] = i.get_positions()
+            stages.append(singleGameData)
+        data = {}
+        data['antNumber'] = gameList[0].get_ant_numbers()
+        data['startPosition'] = [10, 20, 30, 40, 50]
+        data['stickLength'] = 300
+        data['antSpeed'] = 5
+        data['maxSteps'] = maxStep
+        data['minSteps'] = minStep
+        data['stages'] = stages
+
+        self.wfile.write(bytes(json.dumps(data), encoding="utf8"))
 
 
 def main():

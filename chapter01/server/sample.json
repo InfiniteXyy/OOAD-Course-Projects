@@ -1,0 +1,22 @@
+{
+  "data": {
+    "antNumber": 3,
+    "startPosition": [10, 20, 30],
+    "stickLength": 300,
+    "antSpeed": 5,
+    "maxSteps": 50,
+    "minSteps": 10,
+    "stages": [
+      {
+        "directions": [0, 1, 1],
+        "steps": 10,
+        "positions": [[1, 2, 3], [2, 3, 4], [10, 12, 2]]
+      },
+      {
+        "directions": [0, 1, 0],
+        "steps": 12,
+        "positions": [[1, 2, 3], [2, 3, 4], [10, 12, 2]]
+      }
+    ]
+  }
+}
