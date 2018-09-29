@@ -1,71 +1,90 @@
 import React from 'react';
-import { themeColor } from '../global/colors';
+import { beautifulColors, themeColor } from '../global/colors';
 import Anime from 'react-anime';
 import propTypes from 'prop-types';
 
-const updateInterval = 600;
+const updateInterval = 120;
 const stickViewWidth = 500;
+
+const onBorder = position => position === stickViewWidth || position === 0;
 
 export default class DisplayPanel extends React.Component {
   static propTypes = {
     stickLength: propTypes.number,
-    bind: propTypes.func
+    bind: propTypes.func,
+    data: propTypes.shape({
+      antNumber: propTypes.number,
+      startPosition: propTypes.arrayOf(propTypes.number),
+      stickLength: propTypes.number,
+      antSpeed: propTypes.number,
+      maxSteps: propTypes.number,
+      minSteps: propTypes.number,
+      stages: propTypes.arrayOf(
+        propTypes.shape({
+          directions: propTypes.arrayOf(propTypes.number),
+          steps: propTypes.number,
+          positions: propTypes.arrayOf(propTypes.arrayOf(propTypes.number))
+        })
+      )
+    }).isRequired
   };
 
-  static defaultProps = {
-    stickLength: 500
-  };
-
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = {
-      antPositions: [
-        {
-          index: 1,
-          position: 0,
-          lastPosition: 0,
-          died: false
-        }
-      ]
+      lastStep: 0,
+      step: 0
     };
-    props.bind({ start: this.start, pause: this.pause, next: this.next });
+
+    this.props.bind({ start: this.start, pause: this.pause, next: this.next, prev: this.prev, reset: this.reset });
   }
 
   updatePosition = () => {
-    this.setState(({ antPositions }) => {
-      let newPositions = [...antPositions];
-      for (let i of newPositions) {
-        i.lastPosition = i.position;
-        i.position += 30;
-        if (i.position >= this.props.stickLength) {
-          i.died = true;
-        }
-      }
-      return { antPositions: newPositions };
-    });
+    if (this.state.step >= this.props.data.stages[12].steps) {
+      clearInterval(this.intervalId);
+      return;
+    }
+    this.setState({ step: this.state.step + 1, lastStep: this.state.step });
+  };
+  backPosition = () => {
+    if (this.state.step === 0) return;
+    this.setState({ step: this.state.step - 1, lastStep: this.state.step });
   };
 
-  render () {
-    let { position, lastPosition, died } = this.state.antPositions[0];
+  render() {
+    if (!this.props.data.startPosition) return <div />;
+
+    let step = this.state.step;
+    let lastStep = this.state.lastStep;
+    let positions = this.props.data.stages[12].positions;
+    let stickLength = this.props.data.stickLength;
+    if (positions[0] !== this.props.data.startPosition) positions.unshift(this.props.data.startPosition);
     return (
       <div style={styles.container}>
         <div style={styles.ballContainer}>
-          <Anime
-            easing={'linear'}
-            duration={updateInterval}
-            translateX={[lastPosition, position]}
-            opacity={[1, died ? 0 : 1]}
-            key={11 + Date.now()}
-          >
-            {lastPosition >= this.props.stickLength ? <div/> : <div
-              style={styles.circle}/>}
-          </Anime>
+          {[...Array(this.props.data.antNumber).keys()].map((item, index) => {
+            let lastPosition = (positions[lastStep][index] / stickLength) * stickViewWidth;
+            let nextPosition = (positions[step][index] / stickLength) * stickViewWidth;
+            let ballProp = { ...styles.circle };
+            ballProp.background = beautifulColors[index];
+            return (
+              <Anime
+                easing={'linear'}
+                duration={updateInterval}
+                translateX={[lastPosition, nextPosition]}
+                key={index + Date.now()}
+                opacity={[onBorder(lastPosition) ? 0 : 1, onBorder(nextPosition) ? 0 : 1]}
+              >
+                <div style={{ ...ballProp }} />
+              </Anime>
+            );
+          })}
         </div>
 
-        <div style={styles.stick}/>
+        <div style={styles.stick} />
         <span>
           <b>步数: </b>
-          10 / 120
+          {step} / {this.props.data.stages[12].steps}
         </span>
         <span>
           <b>存活: </b>5 / 10
@@ -75,15 +94,22 @@ export default class DisplayPanel extends React.Component {
   }
 
   start = () => {
+    if (this.state.step >= this.props.data.stages[12].steps) return;
     this.updatePosition();
     this.intervalId = setInterval(this.updatePosition, updateInterval);
   };
   pause = () => {
     clearInterval(this.intervalId);
-    console.log("pause")
+    console.log('pause');
   };
   next = () => {
     this.updatePosition();
+  };
+  prev = () => {
+    this.backPosition();
+  };
+  reset = () => {
+    this.setState({ step: 0, lastStep: 0 });
   };
 }
 
@@ -104,12 +130,13 @@ const styles = {
     backgroundColor: themeColor.inactiveIcon
   },
   ballContainer: {
-    width: stickViewWidth
+    width: stickViewWidth,
+    marginBottom: 20
   },
   circle: {
+    position: 'absolute',
     width: 16,
     height: 16,
-    borderRadius: '100%',
-    background: 'steelblue'
+    borderRadius: '100%'
   }
 };

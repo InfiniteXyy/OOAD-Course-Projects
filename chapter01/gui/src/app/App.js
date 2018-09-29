@@ -7,16 +7,21 @@ import { fetchTest } from './global/utils';
 export default class App extends Component {
   constructor(props) {
     super(props);
+    this.state = { data: {} };
+  }
+
+  componentDidMount() {
     fetchTest(result => {
+      this.setState({ data: result });
       console.log(result)
-    })
+    });
   }
 
   render() {
     return (
       <div style={styles.container}>
         <SettingPanel />
-        <MainPanel />
+        <MainPanel data={this.state.data} />
       </div>
     );
   }

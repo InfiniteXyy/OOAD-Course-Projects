@@ -23,7 +23,7 @@ export default class ControlPanel extends React.Component {
     let startBtn = this.state.startButtonShow;
     return (
       <div style={styles.container}>
-        <Button shape="circle" icon="left" />
+        <Button shape="circle" icon="left" onClick={this.clickBtn('left')} />
         <Button
           shape="circle"
           icon={startBtn ? 'caret-right' : 'pause'}
@@ -45,6 +45,8 @@ export default class ControlPanel extends React.Component {
       this.setState(({ startButtonShow }) => ({ startButtonShow: !startButtonShow }));
     } else if (which === 'right') {
       this.props.methods.next();
+    } else if (which === 'left') {
+      this.props.methods.prev();
     }
   };
 }

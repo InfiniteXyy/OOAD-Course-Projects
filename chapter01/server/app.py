@@ -15,7 +15,7 @@ class AntRequestHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         self._set_headers()
-        os.system('../main/gradlew -p ../main run --args="demo" -q > tmp')
+        # os.system('../main/gradlew -p ../main run --args="demo" -q > tmp')
         gameList = readTempData()
         stages = []
         maxStep = 0
@@ -31,7 +31,7 @@ class AntRequestHandler(BaseHTTPRequestHandler):
             stages.append(singleGameData)
         data = {}
         data['antNumber'] = gameList[0].get_ant_numbers()
-        data['startPosition'] = [10, 20, 30, 40, 50]
+        data['startPosition'] = [30, 80, 110, 160, 250]
         data['stickLength'] = 300
         data['antSpeed'] = 5
         data['maxSteps'] = maxStep

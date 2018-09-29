@@ -1,8 +1,12 @@
 import React from 'react';
 import ControlPanel from './components/ControlPanel';
 import DisplayPanel from './components/DisplayPanel';
+import propTypes from 'prop-types';
 
 export default class MainPanel extends React.Component {
+  static propTypes = {
+    data: propTypes.object.isRequired
+  };
   constructor(props) {
     super(props);
     this.controlMethods = {};
@@ -16,6 +20,7 @@ export default class MainPanel extends React.Component {
         </div>
         <div style={{ flex: 3 }}>
           <DisplayPanel
+            data={this.props.data}
             bind={m => {
               for (let i in m) {
                 this.controlMethods[i] = m[i];

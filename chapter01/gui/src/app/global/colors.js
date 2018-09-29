@@ -9,7 +9,9 @@ const themeColor = {
   backgroundColor: colors.lightGray,
   primaryText: colors.black,
   secondaryText: colors.gray,
-  inactiveIcon: colors.iconGray,
+  inactiveIcon: colors.iconGray
 };
 
-export { colors, themeColor };
+const beautifulColors = ['#006e54', '#deb068', '#e5abbe', '#4d4c61', '#89c3eb'];
+
+export { colors, themeColor, beautifulColors };
