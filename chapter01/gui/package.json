@@ -5,8 +5,10 @@
   "homepage": "./",
   "private": true,
   "dependencies": {
+    "@types/faker": "^4.1.4",
     "antd": "^3.9.3",
     "electron-is-dev": "^1.0.1",
+    "faker": "^4.1.0",
     "prop-types": "^15.6.2",
     "react": "^16.5.2",
     "react-anime": "^2.2.0",

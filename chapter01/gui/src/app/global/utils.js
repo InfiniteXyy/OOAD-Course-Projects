@@ -1,12 +1,9 @@
-const fetchTest = (successCallback, errorCallback) => {
-  fetch('api', { method: 'GET' })
-    .catch(e => {
-      if (errorCallback) errorCallback(e);
-    })
-    .then(response => response.json())
-    .then(jsonData => {
-      successCallback(jsonData);
-    });
+const fetchTest = obj => {
+  // length velocity positions
+  let str = Object.entries(obj)
+    .map(([key, val]) => `${key}=${val}`)
+    .join('&');
+  return fetch('api?' + str, { method: 'GET' }).then(response => response.json());
 };
 
 export { fetchTest };

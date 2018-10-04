@@ -12,6 +12,13 @@ const themeColor = {
   inactiveIcon: colors.iconGray
 };
 
-const beautifulColors = ['#006e54', '#deb068', '#e5abbe', '#4d4c61', '#89c3eb'];
+const beautifulColors = [
+  '#ff2d51',
+  '#003472',
+  '#8d4bbb',
+  '#808080',
+  '#5d513c',
+  '#f0c239',
+  '#0eb83a'];
 
 export { colors, themeColor, beautifulColors };

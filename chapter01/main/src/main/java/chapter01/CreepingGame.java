@@ -2,7 +2,6 @@ package chapter01;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -46,7 +45,7 @@ public class CreepingGame {
     List<Integer> ans = new ArrayList<>();
     int situationNum = 1 << config.getAntNumber();
     for (int i = 0; i < situationNum; i++) {
-      char[] directions = String.format("%05d", Integer.valueOf(Integer.toString(i, 2)))
+      char[] directions = String.format("%0"+config.getAntNumber()+"d", Integer.valueOf(Integer.toString(i, 2)))
           .toCharArray();
       ans.add(start(directions));
     }

@@ -2,29 +2,31 @@ import React, { Component } from 'react';
 import SettingPanel from './SettingPanel';
 import MainPanel from './MainPanel';
 import 'antd/dist/antd.css';
-import { fetchTest } from './global/utils';
 
 export default class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { data: {} };
-  }
-
-  componentDidMount() {
-    fetchTest(result => {
-      this.setState({ data: result });
-      console.log(result)
-    });
   }
 
   render() {
     return (
       <div style={styles.container}>
-        <SettingPanel />
-        <MainPanel data={this.state.data} />
+        <SettingPanel gameControl={{ start: this.startGame, stop: this.stopGame }} />
+        <MainPanel
+          bind={i => {
+            this.mainPanel = i;
+          }}
+        />
       </div>
     );
   }
+
+  startGame = config => {
+    this.mainPanel.startGame(config);
+  };
+  stopGame = () => {
+    this.mainPanel.stopGame();
+  };
 }
 
 const styles = {

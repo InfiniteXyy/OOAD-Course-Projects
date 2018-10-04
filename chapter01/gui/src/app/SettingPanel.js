@@ -1,19 +1,27 @@
 import React from 'react';
 import { themeColor } from './global/colors';
-import { Button, Dropdown, InputNumber, message, Menu, Modal } from 'antd';
+import { Button, InputNumber, message, Menu, Modal } from 'antd';
 import SettingItem from './components/SettingItem';
+import propTypes from 'prop-types';
 
 const confirm = Modal.confirm;
 
 const defaultConfig = () => ({
   config: { stickLength: 300, antDefaultSpeed: 5 },
-  ants: [{ speed: -1, position: 10, direction: 1 }]
+  ants: [10]
 });
 
 export default class SettingPanel extends React.Component {
+  static propTypes = {
+    gameControl: propTypes.shape({
+      start: propTypes.func,
+      stop: propTypes.func
+    }).isRequired
+  };
   constructor(props) {
     super(props);
-    this.state = defaultConfig();
+    this.state = { ...defaultConfig() };
+    this.state.isStart = false;
   }
 
   render() {
@@ -24,7 +32,14 @@ export default class SettingPanel extends React.Component {
           <b>基本设置</b>
           <SettingItem label={'杆子长度'} value={config.stickLength} setValue={this.setValue('stickLength')} />
           <SettingItem label={'蚂蚁速度'} value={config.antDefaultSpeed} setValue={this.setValue('antDefaultSpeed')} />
-          <div style={{ display: 'flex', alignItems: 'center', marginTop: 20, marginBottom: 20 }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              marginTop: 20,
+              marginBottom: 20
+            }}
+          >
             <b style={{ marginRight: 20 }}>蚂蚁设置</b>
             <Button.Group>
               <Button
@@ -41,13 +56,27 @@ export default class SettingPanel extends React.Component {
               />
             </Button.Group>
           </div>
+          <a onClick={this.useDemo}>使用样例数据</a>
+
           {ants.map(this.renderAntItem)}
         </div>
 
-        <Button size={'large'} style={styles.buttonContainer} htmlType={'button'}>
-          启动
+        <Button
+          size={'large'}
+          style={styles.buttonContainer}
+          htmlType={'button'}
+          type={this.state.isStart ? 'danger' : 'primary'}
+          onClick={this.handleMainButton}
+        >
+          {this.state.isStart ? '结束' : '启动'}
         </Button>
-        <Button size={'large'} style={styles.buttonContainer} htmlType={'button'} onClick={this.showDeleteConfirm}>
+        <Button
+          size={'large'}
+          style={styles.buttonContainer}
+          htmlType={'button'}
+          onClick={this.showDeleteConfirm}
+          disabled={this.state.isStart}
+        >
           重置
         </Button>
       </div>
@@ -62,38 +91,60 @@ export default class SettingPanel extends React.Component {
     });
   };
 
+  setAntPosition = i => v => {
+    this.setState({
+      ants: this.state.ants.map((value, index) => {
+        if (index === i) return v;
+        return value;
+      })
+    });
+  };
+
   renderAntItem = (ant, index) => {
-    let menu = (
-      <Menu>
-        <Menu.Item key="1">左侧</Menu.Item>
-        <Menu.Item key="2">右侧</Menu.Item>
-      </Menu>
-    );
     return (
       <div key={index.toString()} style={{ display: 'flex', alignItems: 'center', marginTop: 10 }}>
-        <b style={{ flex: 1 }}>{index + 1 + ': '}</b>
-        <span style={{ flex: 2 }}>方向</span>
-        <Dropdown overlay={menu} trigger={['click']}>
-          <Button size={'small'} style={{ flex: 2, marginRight: 10 }}>
-            {ant.direction !== 1 ? '左侧' : '右侧'}
-          </Button>
-        </Dropdown>
-        <span style={{ flex: 2 }}>位置</span>
+        <b>{`Ant ${index + 1}: `}</b>
+        <span style={{ marginLeft: 10, marginRight: 10 }}> 位置</span>
         <InputNumber
           size={'small'}
-          style={{ flex: 2 }}
-          value={ant.position}
+          value={ant}
           min={1}
           max={this.state.config.stickLength - 1}
+          onChange={this.setAntPosition(index)}
         />
       </div>
     );
   };
 
+  handleMainButton = () => {
+    let { start, stop } = this.props.gameControl;
+    if (!this.state.isStart) {
+      start({
+        positions: this.state.ants.join(','),
+        length: this.state.config.stickLength,
+        velocity: this.state.config.antDefaultSpeed
+      });
+    } else {
+      stop();
+    }
+
+    this.setState(({ isStart }) => {
+      return { isStart: !isStart };
+    });
+  };
+
+  useDemo = () => {
+    this.setState({
+      config: { stickLength: 300, antDefaultSpeed: 5 },
+      ants: [30, 80, 110, 160, 250]
+    });
+  };
+
   antChange = type => () => {
     let { ants } = this.state;
     if (type === 'plus') {
-      ants.push({ speed: -1, position: 10, direction: 1 });
+      // add new ant
+      ants.push(1);
     } else {
       this.state.ants.pop();
     }

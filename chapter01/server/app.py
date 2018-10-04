@@ -3,6 +3,7 @@ from pathlib import Path
 import json
 import os
 from reader import *
+from urllib.parse import urlparse
 
 parent_path = Path(os.getcwd()).parent
 
@@ -15,7 +16,15 @@ class AntRequestHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         self._set_headers()
-        # os.system('../main/gradlew -p ../main run --args="demo" -q > tmp')
+        o = urlparse(self.path)
+        gameConfig = dict(qc.split("=") for qc in o.query.split("&"))
+        print(gameConfig)
+        gradle = '../main/gradlew -p ../main run --args="game {} {} {}" -q > tmp'.format(
+            gameConfig['length'], gameConfig['velocity'], gameConfig['positions'].replace(
+                ",", " ")
+        )
+        print(gradle)
+        os.system(gradle)
         gameList = readTempData()
         stages = []
         maxStep = 0
@@ -31,9 +40,9 @@ class AntRequestHandler(BaseHTTPRequestHandler):
             stages.append(singleGameData)
         data = {}
         data['antNumber'] = gameList[0].get_ant_numbers()
-        data['startPosition'] = [30, 80, 110, 160, 250]
-        data['stickLength'] = 300
-        data['antSpeed'] = 5
+        data['startPosition'] = gameConfig['positions'].split(",")
+        data['stickLength'] = gameConfig['length']
+        data['antSpeed'] = gameConfig['velocity']
         data['maxSteps'] = maxStep
         data['minSteps'] = minStep
         data['stages'] = stages

@@ -1,6 +1,7 @@
 import React from 'react';
 import { beautifulColors, themeColor } from '../global/colors';
 import Anime from 'react-anime';
+import { Modal, Button, Table, Popconfirm } from 'antd';
 import propTypes from 'prop-types';
 
 const updateInterval = 120;
@@ -33,14 +34,16 @@ export default class DisplayPanel extends React.Component {
     super(props);
     this.state = {
       lastStep: 0,
-      step: 0
+      step: 0,
+      stageIndex: 0,
+      modalVisible: false
     };
 
-    this.props.bind({ start: this.start, pause: this.pause, next: this.next, prev: this.prev, reset: this.reset });
+    this.props.bind(this);
   }
 
   updatePosition = () => {
-    if (this.state.step >= this.props.data.stages[12].steps) {
+    if (this.state.step >= this.props.data.stages[this.state.stageIndex].steps) {
       clearInterval(this.intervalId);
       return;
     }
@@ -50,17 +53,38 @@ export default class DisplayPanel extends React.Component {
     if (this.state.step === 0) return;
     this.setState({ step: this.state.step - 1, lastStep: this.state.step });
   };
+  showModal = () => {
+    this.setState({ modalVisible: true });
+  };
+  hideModal = () => {
+    this.setState({ modalVisible: false });
+  };
 
   render() {
-    if (!this.props.data.startPosition) return <div />;
-
+    let stage = this.props.data.stages[this.state.stageIndex];
     let step = this.state.step;
     let lastStep = this.state.lastStep;
-    let positions = this.props.data.stages[12].positions;
+    let positions = stage.positions;
     let stickLength = this.props.data.stickLength;
     if (positions[0] !== this.props.data.startPosition) positions.unshift(this.props.data.startPosition);
     return (
       <div style={styles.container}>
+        <span>
+          <b>当前方向: </b>
+          {stage.directions.map(i => (i === 0 ? '⬅️' : '➡️')).join(' ')}
+        </span>
+        <Button onClick={this.showModal} style={{ marginBottom: 100, marginTop: 20 }}>
+          选择方向
+        </Button>
+        <Modal
+          style={{ top: 20 }}
+          title="选择一个方向"
+          visible={this.state.modalVisible}
+          footer={null}
+          onCancel={this.hideModal}
+        >
+          {this.renderStageList()}
+        </Modal>
         <div style={styles.ballContainer}>
           {[...Array(this.props.data.antNumber).keys()].map((item, index) => {
             let lastPosition = (positions[lastStep][index] / stickLength) * stickViewWidth;
@@ -73,7 +97,7 @@ export default class DisplayPanel extends React.Component {
                 duration={updateInterval}
                 translateX={[lastPosition, nextPosition]}
                 key={index + Date.now()}
-                opacity={[onBorder(lastPosition) ? 0 : 1, onBorder(nextPosition) ? 0 : 1]}
+                opacity={[onBorder(lastPosition) ? 0 : 0.7, onBorder(nextPosition) ? 0 : 0.7]}
               >
                 <div style={{ ...ballProp }} />
               </Anime>
@@ -84,23 +108,65 @@ export default class DisplayPanel extends React.Component {
         <div style={styles.stick} />
         <span>
           <b>步数: </b>
-          {step} / {this.props.data.stages[12].steps}
+          {step} / {stage.steps}
         </span>
         <span>
-          <b>存活: </b>5 / 10
+          <b>存活: </b>
+          {stage.positions[step].filter(i => !(i === stickLength) && !(i === 0)).length} / {stage.positions[0].length}
         </span>
       </div>
     );
   }
 
+  renderStageList = () => {
+    return (
+      <Table dataSource={this.props.data.stages} pagination={{ pageSize: 7 }}>
+        <Table.ColumnGroup>
+          <Table.Column
+            title={'方向'}
+            dataIndex={'directions'}
+            key={'directions'}
+            render={item => item.map(i => (i === 0 ? '左' : '右')).join(', ')}
+          />
+          <Table.Column title={'总步数'} dataIndex={'steps'} key={'steps'} sorter={(a, b) => a.steps - b.steps} />
+          <Table.Column
+            width={'50'}
+            title={'操作'}
+            render={item => {
+              return (
+                <Popconfirm
+                  title={'你确定将方向设置为' + item.directions.join(', ') + '？'}
+                  onConfirm={() => this.selectStage(item)}
+                  okText="确定"
+                  cancelText="取消"
+                >
+                  <Button size={'mini'}>设置</Button>
+                </Popconfirm>
+              );
+            }}
+          />
+        </Table.ColumnGroup>
+      </Table>
+    );
+  };
+
+  selectStage = item => {
+    this.setState({
+      step: 0,
+      lastStep: 0,
+      stageIndex: parseInt(item.directions.join(''), 2),
+      modalVisible: false
+    });
+    this.pause();
+  };
+
   start = () => {
-    if (this.state.step >= this.props.data.stages[12].steps) return;
+    if (this.state.step >= this.props.data.stages[this.state.stageIndex].steps) return;
     this.updatePosition();
     this.intervalId = setInterval(this.updatePosition, updateInterval);
   };
   pause = () => {
     clearInterval(this.intervalId);
-    console.log('pause');
   };
   next = () => {
     this.updatePosition();
