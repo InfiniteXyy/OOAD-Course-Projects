@@ -3,11 +3,12 @@ import { beautifulColors, themeColor } from '../global/colors';
 import Anime from 'react-anime';
 import { Modal, Button, Table, Popconfirm } from 'antd';
 import propTypes from 'prop-types';
+import MyPanel from './MyPanel';
 
 const updateInterval = 120;
 const stickViewWidth = 500;
 
-const onBorder = position => position === stickViewWidth || position === 0;
+const onBorder = position => position >= stickViewWidth || position <= 0;
 
 export default class DisplayPanel extends React.Component {
   static propTypes = {
@@ -69,10 +70,6 @@ export default class DisplayPanel extends React.Component {
     if (positions[0] !== this.props.data.startPosition) positions.unshift(this.props.data.startPosition);
     return (
       <div style={styles.container}>
-        <span>
-          <b>当前方向: </b>
-          {stage.directions.map(i => (i === 0 ? '⬅️' : '➡️')).join(' ')}
-        </span>
         <Button onClick={this.showModal} style={{ marginBottom: 100, marginTop: 20 }}>
           选择方向
         </Button>
@@ -104,16 +101,18 @@ export default class DisplayPanel extends React.Component {
             );
           })}
         </div>
-
         <div style={styles.stick} />
-        <span>
-          <b>步数: </b>
-          {step} / {stage.steps}
-        </span>
-        <span>
-          <b>存活: </b>
-          {stage.positions[step].filter(i => !(i === stickLength) && !(i === 0)).length} / {stage.positions[0].length}
-        </span>
+        <MyPanel panel="步数" content={step + ' / ' + stage.steps} />
+        <MyPanel
+          panel="存活"
+          content={
+            stage.positions[step].filter(i => !(i >= stickLength) && !(i <= 0)).length +
+            ' / ' +
+            stage.positions[0].length
+          }
+        />
+        <MyPanel panel="初始方向" content={stage.directions.map(i => (i === 0 ? '左' : '右')).join(' ')} />
+        <MyPanel panel="当前位置" content={stage.positions[step].join(', ')} />
       </div>
     );
   }
