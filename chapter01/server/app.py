@@ -19,12 +19,16 @@ class AntRequestHandler(BaseHTTPRequestHandler):
         o = urlparse(self.path)
         gameConfig = dict(qc.split("=") for qc in o.query.split("&"))
         print(gameConfig)
-        gradle = '../main/gradlew -p ../main run --args="game {} {} {}" -q > tmp'.format(
+        # gradle = '../main/gradlew -p ../main run --args="game {} {} {}" -q > tmp'.format(
+        #     gameConfig['length'], gameConfig['velocity'], gameConfig['positions'].replace(
+        #         ",", " ")
+        # )
+        command = 'java -jar ./OOAD-0.1.jar game {} {} {} > tmp'.format(
             gameConfig['length'], gameConfig['velocity'], gameConfig['positions'].replace(
                 ",", " ")
         )
-        print(gradle)
-        os.system(gradle)
+        print(command)
+        os.system(command)
         gameList = readTempData()
         stages = []
         maxStep = 0

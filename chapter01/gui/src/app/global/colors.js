@@ -13,12 +13,12 @@ const themeColor = {
 };
 
 const beautifulColors = [
-  '#ff2d51',
-  '#003472',
-  '#8d4bbb',
-  '#808080',
-  '#5d513c',
-  '#f0c239',
-  '#0eb83a'];
+  'red',
+  'green',
+  'black',
+  'blue',
+  'orange',
+  'yellow',
+  'brown'];
 
 export { colors, themeColor, beautifulColors };

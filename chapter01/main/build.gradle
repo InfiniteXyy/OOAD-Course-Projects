@@ -3,7 +3,13 @@ plugins {
     id 'application'
 }
 
-group 'OOAD'
+jar {
+    manifest {
+        attributes 'Main-Class': 'chapter01.Main'
+    }
+}
+
+group 'OOAD-Chapter01'
 version '0.1'
 
 sourceCompatibility = 1.8
