@@ -40,7 +40,7 @@
 - 启动 python 服务器
 - 启动 React Server
 
-如果你是 mac / linux 系统，可以运行 `install.sh` 脚本
+如果你是 mac / linux 系统，可以运行 `install.sh` 脚本
 ```bash
 git clone https://github.com/InfiniteXyy/OOAD-Course.git
 cd OOAD-Course/chapter01
