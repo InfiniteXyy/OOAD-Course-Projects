@@ -18,7 +18,7 @@ public class Main {
 
   private static void runGame(Config config) throws Exception {
     CreepingGame game = new CreepingGame(config);
-    game.getAllSituationSteps();
+    game.simulateAllSituations();
   }
 
 

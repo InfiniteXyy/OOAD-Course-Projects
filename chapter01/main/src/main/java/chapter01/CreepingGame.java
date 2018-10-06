@@ -14,7 +14,7 @@ public class CreepingGame {
     this.config = config;
   }
 
-  public int start(char[] directions) throws Exception {
+  private int start(char[] directions) throws Exception {
     // set ants
     int v = config.getAntVelocity();
     List<Ant> ants = new ArrayList<>();
@@ -31,14 +31,14 @@ public class CreepingGame {
     int step = 0;
     while (stick.hasAnt()) {
       stick.nextFrame();
-      stick.printFrame();
+      System.out.println(stick.printFrame());
       step++;
     }
     System.out.println("step: " + step + "\n");
     return step;
   }
 
-  public List<Integer> getAllSituationSteps() throws Exception {
+  public List<Integer> simulateAllSituations() throws Exception {
     // use number to set directions
     // 1 0 0 0 1 => 19
     // 0 ~ 31 => 32 situations
@@ -52,13 +52,19 @@ public class CreepingGame {
     return ans;
   }
 
-  public int randomDemo() throws Exception {
+  private int randomDemo() throws Exception {
     char[] directions = new char[config.getAntNumber()];
     for (int i = 0; i < directions.length; i++) {
       directions[i] = random.nextBoolean() ? '1' : '0';
     }
 
     return start(directions);
+  }
+
+  public static void main(String[] args) throws Exception {
+    Config config = Config.createDemoConfig();
+    CreepingGame game = new CreepingGame(config);
+    System.out.println(game.simulateAllSituations());
   }
 }
 
