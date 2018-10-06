@@ -62,7 +62,7 @@ yarn gui run start
 
 <img src="https://raw.githubusercontent.com/InfiniteXyy/OOAD-Course/master/chapter01/screenshots/demo.gif">
 
-<img src="https://raw.githubusercontent.com/InfiniteXyy/OOAD-Course/master/chapter01/screenshots/main.png>
+<img src="https://raw.githubusercontent.com/InfiniteXyy/OOAD-Course/master/chapter01/screenshots/main.png">
 
 <img src="https://raw.githubusercontent.com/InfiniteXyy/OOAD-Course/master/chapter01/screenshots/running.png">
 
