@@ -53,7 +53,7 @@ python3 app.py
 
 # run web server
 cd gui
-yarn gui run start
+yarn run start
 ```
 
 如果你是 windows 系统，可以手动实现以上操作
