@@ -12,6 +12,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.swing.JPanel;
 
 public class GameDesk extends JPanel {
@@ -29,7 +30,7 @@ public class GameDesk extends JPanel {
       store.dispatch("ADD_COMPUTER_CARD");
 
     });
-    setBackground(Color.decode("#123456"));
+    setBackground(Color.decode("#44617b"));
     addButtonClickListener();
     unsubscribe = store.subscribe(this::repaint);
   }
@@ -38,6 +39,9 @@ public class GameDesk extends JPanel {
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
     if (!store.state.gameRunning) {
+      Graphics2D g2 = (Graphics2D) g;
+      g2.setColor(Color.WHITE);
+      Utils.drawTextCenterInRect(g2, g2.getClipBounds(), "按「开始游戏」启动", "h1");
       return;
     }
     List<CardView> computerCards = new ArrayList<>();

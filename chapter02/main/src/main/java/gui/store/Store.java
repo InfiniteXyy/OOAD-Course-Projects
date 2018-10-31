@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-// 省略了 reducer 的迁移
+// game.Game 类即为 reducer
 public class Store {
 
   private static Store store = new Store();
@@ -30,10 +30,10 @@ public class Store {
   public void dispatch(String action) {
     switch (action) {
       case "ADD_MY_CARD":
-        this.state.myCards.add(1);
+        this.state.myCards.add(new Random().nextInt(13));
         break;
       case "ADD_COMPUTER_CARD":
-        this.state.yourCards.add(2);
+        this.state.yourCards.add(new Random().nextInt(13));
         break;
       case "START_GAME":
         this.state.gameRunning = true;
