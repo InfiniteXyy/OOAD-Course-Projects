@@ -15,13 +15,15 @@ public class Main {
     GameDesk gameDesk = new GameDesk();
     c.fill = GridBagConstraints.BOTH;
     c.weightx = 1.0;
-    c.weighty = 1.0;
+    c.weighty = 0.95;
     c.gridx = 0;
     c.gridy = 0;
     pane.add(gameDesk, c);
     ControlPanel controlPanel = new ControlPanel();
     c.fill = GridBagConstraints.BOTH;
-    c.weighty = 1.0;
+    c.weighty = 0.05;
+    c.ipadx = 10;
+    c.ipady = 10;
     c.gridx = 0;
     c.gridy = 1;
     pane.add(controlPanel, c);
@@ -39,15 +41,13 @@ public class Main {
     frame.pack();
     frame.setSize(800, 600);
     frame.setVisible(true);
+    frame.setResizable(false);
   }
 
   public static void main(String[] args) {
     //Schedule a job for the event-dispatching thread:
     //creating and showing this application's GUI.
-    javax.swing.SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-        createAndShowGUI();
-      }
-    });
+    JFrame.setDefaultLookAndFeelDecorated(true);
+    javax.swing.SwingUtilities.invokeLater(Main::createAndShowGUI);
   }
 }
