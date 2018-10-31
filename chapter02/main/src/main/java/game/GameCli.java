@@ -1,13 +1,11 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+package game;
+
 import java.util.Scanner;
 
-public class Playroom {
+public class GameCli {
 
   private int score = 0;
-  static Scanner scanner = new Scanner(System.in);
+  private static Scanner scanner = new Scanner(System.in);
 
   public void printScore() {
     System.out.println("你的比分是：" + score);
@@ -37,5 +35,10 @@ public class Playroom {
           break;
       }
     }
+  }
+
+  public static void main(String[] args) {
+    new GameCli().play();
+
   }
 }
