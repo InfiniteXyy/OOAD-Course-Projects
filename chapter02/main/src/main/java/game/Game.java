@@ -1,46 +1,77 @@
 package game;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
-public class Game {
+public class Game implements GameInterface {
 
-  public boolean judge(Player master, Player pingmin) {
+  private boolean isGaming;
+  private List<Player> players;
+  private ComputerPlayer computerPlayer;
+  private int curPlayerIndex;
+  private Deck deck;
+
+  private Game() {
+    isGaming = true;
+    players = new ArrayList<>();
+    this.deck = new Deck();
+    computerPlayer = new ComputerPlayer();
+    computerPlayer.fillCards(deck);
+  }
+
+  private void initPlayers(int num) {
+    assert num >= 1;
+    for (int i = 0; i < num; i++) {
+      players.add(new Player());
+    }
+    curPlayerIndex = 0;
+  }
+
+
+  public static Game createGame(int playerNum) {
+    Game game = new Game();
+    game.initPlayers(playerNum);
+    return game;
+  }
+
+  @Override
+  public void drawCardForPlayer(Player player) {
+    player.addCard(deck.drawCard());
+  }
+
+  @Override
+  public void stopDrawingForPlayer(Player player) {
+    player.setDrawing(false);
+  }
+
+  @Override
+  public Player getCurrentPlayer() {
+    return players.get(curPlayerIndex);
+  }
+
+  @Override
+  public ComputerPlayer getComputerPlayer() {
+    return computerPlayer;
+  }
+
+  @Override
+  public void nextPlayer() {
+    if (curPlayerIndex + 1 == players.size()) {
+      this.isGaming = false;
+    } else {
+      curPlayerIndex++;
+    }
+  }
+
+  // 如果所有玩家都超 21 了，或者所有人类玩家都选择结束，就 isGaming = false;
+  @Override
+  public boolean judgeGame() {
     return new Random().nextBoolean();
   }
 
-  public int start() {
-    Deck deck = new Deck();
-    Player me = new HumanPlayer();
-    Player computer = new ComputerPlayer();
-    System.out.println("游戏开始！");
-    // 抽牌过程
-    while (me.isDrawing() || computer.isDrawing()) {
-      computer.refreshDrawingState();
-      if (me.isDrawing()) {
-        me.refreshDrawingState();
-      }
-
-      if (computer.isDrawing()) {
-        int card = deck.drawCard();
-        computer.addCard(card);
-      }
-      if (me.isDrawing()) {
-        int card = deck.drawCard();
-        me.addCard(card);
-      }
-
-      // 打印手牌
-      System.out.println(computer.getCardInfo());
-      System.out.println(me.getCardInfo());
-    }
-
-    if (judge(computer, me)) {
-      System.out.println("庄家赢");
-    } else {
-      System.out.println("你赢");
-    }
-
-    return 0;
+  @Override
+  public boolean isGaming() {
+    return this.isGaming;
   }
-
 }

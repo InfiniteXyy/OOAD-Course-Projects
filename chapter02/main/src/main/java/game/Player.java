@@ -3,14 +3,21 @@ package game;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Player {
+public class Player {
 
+  private static int _ID = 0;
+  private int userId;
   private List<Integer> cards;
   private boolean isDrawing;
 
   public Player() {
+    this.userId = _ID++;
     cards = new ArrayList<>();
     isDrawing = true;
+  }
+
+  public int getUserId() {
+    return userId;
   }
 
   public boolean isDrawing() {
@@ -37,7 +44,4 @@ public abstract class Player {
     this.cards.add(card);
   }
 
-  public abstract String getCardInfo();
-
-  public abstract void refreshDrawingState();
 }
