@@ -1,19 +1,22 @@
 package gui.store;
 
 import game.Game;
-import java.util.ArrayList;
-import java.util.List;
 
 public class State {
 
-  public List<Integer> myCards;
-  public List<Integer> yourCards;
+  public static String STAGE_READY = "ready";
+  public static String STAGE_DRAWING = "drawing card";
+  public static String STAGE_NEXT_PLAYER = "next player";
+  public static String STAGE_GAME_RESULT = "game result";
+
+
   public int score = 0;
-  public boolean gameRunning = false;
+  public String stage;
   public Game game;
+  public boolean gameResult;
 
   State() {
-    myCards = new ArrayList<>();
-    yourCards = new ArrayList<>();
+    this.stage = STAGE_READY;
   }
+
 }

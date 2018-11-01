@@ -9,7 +9,7 @@ public interface GameInterface {
 
   Player getCurrentPlayer();
 
-  void nextPlayer();
+  boolean nextPlayer();
 
   Player getComputerPlayer();
 

@@ -56,12 +56,13 @@ public class Game implements GameInterface {
   }
 
   @Override
-  public void nextPlayer() {
+  public boolean nextPlayer() {
     if (curPlayerIndex + 1 == players.size()) {
       this.isGaming = false;
     } else {
       curPlayerIndex++;
     }
+    return this.isGaming;
   }
 
   // 如果所有玩家都超 21 了，或者所有人类玩家都选择结束，就 isGaming = false;

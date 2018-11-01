@@ -14,7 +14,7 @@ class Deck {
   }
 
   int drawCard() {
-    return random.nextInt(13) + 1;
+    return random.nextInt(13);
   }
 
 }

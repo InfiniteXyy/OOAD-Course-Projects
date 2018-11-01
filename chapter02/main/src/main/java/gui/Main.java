@@ -1,18 +1,22 @@
 package gui;
 
+import gui.store.Store;
 import gui.view.ControlPanel;
 import gui.view.GameDesk;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 
 public class Main {
 
   private static void addComponentsToPane(Container pane) {
     pane.setLayout(new GridBagLayout());
     GridBagConstraints c = new GridBagConstraints();
+
     GameDesk gameDesk = new GameDesk();
+    Store.getInstance().subscribe(gameDesk::refreshStage);
     c.fill = GridBagConstraints.BOTH;
     c.weightx = 1.0;
     c.weighty = 2.0;
@@ -30,7 +34,7 @@ public class Main {
   private static void createAndShowGUI() {
     //Create and set up the window.
     JFrame frame = new JFrame("21 game");
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
     //Set up the content pane.
     addComponentsToPane(frame.getContentPane());

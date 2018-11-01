@@ -1,13 +1,11 @@
 package gui.view.components;
 
-import gui.view.Utils;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Random;
 import javax.imageio.ImageIO;
 
 public class CardView {

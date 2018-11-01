@@ -1,6 +1,7 @@
 package gui.view;
 
 import gui.common.GlobalFont;
+import gui.store.State;
 import gui.store.Store;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -14,7 +15,7 @@ public class ControlPanel extends JPanel {
   public ControlPanel() {
     setLayout(new GridBagLayout());
     GridBagConstraints c = new GridBagConstraints();
-    JLabel logo = new JLabel("21 game.Game", SwingConstants.CENTER);
+    JLabel logo = new JLabel("21 game", SwingConstants.CENTER);
     logo.setFont(GlobalFont.H1());
     c.fill = GridBagConstraints.BOTH;
     c.weighty = 1;
@@ -24,9 +25,13 @@ public class ControlPanel extends JPanel {
     add(logo, c);
 
     JButton startBtn = new JButton("开始");
-    Store.getInstance()
-        .subscribe(() -> startBtn.setText(Store.getInstance().state.gameRunning ? "暂停" : "开始"));
-    startBtn.addActionListener(e -> Store.getInstance().dispatch("START_GAME"));
+    Store.getInstance().subscribe(() -> {
+      startBtn.setText(!Store.getInstance()
+          .state.stage.equals(State.STAGE_READY) ? "暂停" : "开始");
+    });
+    startBtn.addActionListener(e -> {
+      Store.getInstance().dispatch("START_GAME");
+    });
     c.weighty = 1;
     c.weightx = 0.5;
     c.gridx = 1;

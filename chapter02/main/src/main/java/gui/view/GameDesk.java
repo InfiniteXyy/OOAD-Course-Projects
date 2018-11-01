@@ -1,95 +1,49 @@
 package gui.view;
 
+import gui.store.State;
 import gui.store.Store;
-import gui.view.components.Button;
-import gui.view.components.CardView;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import javax.swing.JPanel;
 
 public class GameDesk extends JPanel {
 
-  private Button continueDrawBtn;
-  private Button quitDrawBtn;
-  private Runnable unsubscribe;
+  private ReadyView readyView = new ReadyView();
+  private DrawingView drawingView = new DrawingView();
+  private NextPlayerView nextPlayerView = new NextPlayerView();
+  private ResultView resultView = new ResultView();
+
   private Store store = Store.getInstance();
+  private GridBagConstraints c;
+
+  private JPanel getMainView() {
+    String stage = store.state.stage;
+    if (stage.equals(State.STAGE_READY)) {
+      return readyView;
+    } else if (stage.equals(State.STAGE_DRAWING)) {
+      return drawingView;
+    } else if (stage.equals(State.STAGE_NEXT_PLAYER)) {
+      return nextPlayerView;
+    } else {
+      return resultView;
+    }
+  }
 
   public GameDesk() {
-    continueDrawBtn = new Button(16, 400, "抽牌", () -> {
-      store.dispatch("ADD_MY_CARD");
-    });
-    quitDrawBtn = new Button(132, 400, "放弃", () -> {
-      store.dispatch("QUIT_DRAW");
-
-    });
-    setBackground(Color.decode("#44617b"));
-    addButtonClickListener();
-    unsubscribe = store.subscribe(this::repaint);
+    this.setLayout(new GridBagLayout());
+    c = new GridBagConstraints();
+    c.fill = GridBagConstraints.BOTH;
+    c.weightx = 1.0;
+    c.weighty = 1.0;
+    c.gridx = 0;
+    c.gridy = 0;
+    add(getMainView(), c);
   }
 
-  @Override
-  protected void paintComponent(Graphics g) {
-    super.paintComponent(g);
-    if (!store.state.gameRunning) {
-      Graphics2D g2 = (Graphics2D) g;
-      g2.setColor(Color.WHITE);
-      Utils.drawTextCenterInRect(g2, g2.getClipBounds(), "按「开始游戏」启动", "h1");
-      return;
-    }
-    List<CardView> computerCards = new ArrayList<>();
-    List<CardView> myCards = new ArrayList<>();
-    List<Integer> stateMe = store.state.myCards;
-    List<Integer> stateYou = store.state.yourCards;
-    for (int i = 0; i < stateYou.size(); i++) {
-      computerCards.add(new CardView(i, 0, stateYou.get(i)));
-    }
-    for (int i = 0; i < stateMe.size(); i++) {
-      myCards.add(new CardView(i, 1, stateMe.get(i)));
-    }
-
-    Graphics2D g2 = (Graphics2D) g;
-    for (CardView cardView : computerCards) {
-      cardView.draw(g2);
-    }
-    for (CardView cardView : myCards) {
-      cardView.draw(g2);
-    }
-    continueDrawBtn.draw(g2);
-    quitDrawBtn.draw(g2);
-  }
-
-  private void addButtonClickListener() {
-    addMouseListener(new MouseAdapter() {
-      @Override
-      public void mousePressed(MouseEvent e) {
-        continueDrawBtn.handleClick(e.getPoint());
-        quitDrawBtn.handleClick(e.getPoint());
-      }
-    });
-
-    addMouseMotionListener(new MouseMotionListener() {
-      @Override
-      public void mouseDragged(MouseEvent e) {
-
-      }
-
-      @Override
-      public void mouseMoved(MouseEvent e) {
-        if (store.state.gameRunning) {
-          if (continueDrawBtn.contains(e.getPoint()) || quitDrawBtn.contains(e.getPoint())) {
-            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-          } else {
-            setCursor(Cursor.getDefaultCursor());
-          }
-        }
-      }
-    });
+  public void refreshStage() {
+    this.removeAll();
+    this.add(getMainView(), c);
+    this.revalidate();
+    this.repaint();
   }
 }
