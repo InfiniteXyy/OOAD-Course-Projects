@@ -12,7 +12,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.swing.JPanel;
 
 public class GameDesk extends JPanel {
@@ -27,7 +26,7 @@ public class GameDesk extends JPanel {
       store.dispatch("ADD_MY_CARD");
     });
     quitDrawBtn = new Button(132, 400, "放弃", () -> {
-      store.dispatch("ADD_COMPUTER_CARD");
+      store.dispatch("QUIT_DRAW");
 
     });
     setBackground(Color.decode("#44617b"));

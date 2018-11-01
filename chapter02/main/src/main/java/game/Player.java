@@ -10,7 +10,7 @@ public class Player {
   private List<Integer> cards;
   private boolean isDrawing;
 
-  public Player() {
+  Player() {
     this.userId = _ID++;
     cards = new ArrayList<>();
     isDrawing = true;
@@ -24,9 +24,6 @@ public class Player {
     return isDrawing;
   }
 
-  public void setDrawing(boolean drawing) {
-    isDrawing = drawing;
-  }
 
   public List<Integer> getCards() {
     return cards;
@@ -40,8 +37,11 @@ public class Player {
     return result;
   }
 
-  public void addCard(int card) {
+  void addCard(int card) {
     this.cards.add(card);
   }
 
+  void setStopDrawing() {
+    isDrawing = false;
+  }
 }

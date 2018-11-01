@@ -29,7 +29,7 @@ public class Main {
 
   private static void createAndShowGUI() {
     //Create and set up the window.
-    JFrame frame = new JFrame("21 game.Game");
+    JFrame frame = new JFrame("21 game");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     //Set up the content pane.

@@ -42,7 +42,7 @@ public class Game implements GameInterface {
 
   @Override
   public void stopDrawingForPlayer(Player player) {
-    player.setDrawing(false);
+    player.setStopDrawing();
   }
 
   @Override

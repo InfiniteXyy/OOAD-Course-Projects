@@ -1,8 +1,9 @@
 package gui.store;
 
+import game.Game;
+import game.Player;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 // game.Game 类即为 reducer
 public class Store {
@@ -28,15 +29,27 @@ public class Store {
   }
 
   public void dispatch(String action) {
+    Game game = null;
+    Player player = null;
+    if (this.state.gameRunning) {
+      game = this.state.game;
+      player = game.getCurrentPlayer();
+    }
     switch (action) {
       case "ADD_MY_CARD":
-        this.state.myCards.add(new Random().nextInt(13));
+        if (this.state.gameRunning) {
+          game.drawCardForPlayer(player);
+          this.state.myCards = new ArrayList<>(player.getCards());
+        }
         break;
-      case "ADD_COMPUTER_CARD":
-        this.state.yourCards.add(new Random().nextInt(13));
+      case "QUIT_DRAW":
+        if (this.state.gameRunning) {
+          game.stopDrawingForPlayer(player);
+        }
         break;
       case "START_GAME":
         this.state.gameRunning = true;
+        this.state.game = Game.createGame(1);
         break;
       case "END_GAME":
         this.state.gameRunning = false;
