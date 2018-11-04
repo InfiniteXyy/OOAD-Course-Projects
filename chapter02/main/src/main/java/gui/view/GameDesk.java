@@ -9,9 +9,7 @@ import javax.swing.JPanel;
 public class GameDesk extends JPanel {
 
   private ReadyView readyView = new ReadyView();
-  private DrawingView drawingView = new DrawingView();
-  private NextPlayerView nextPlayerView = new NextPlayerView();
-  private ResultView resultView = new ResultView();
+  private PlayingView playingView = new PlayingView();
 
   private Store store = Store.getInstance();
   private GridBagConstraints c;
@@ -20,12 +18,8 @@ public class GameDesk extends JPanel {
     String stage = store.state.stage;
     if (stage.equals(State.STAGE_READY)) {
       return readyView;
-    } else if (stage.equals(State.STAGE_DRAWING)) {
-      return drawingView;
-    } else if (stage.equals(State.STAGE_NEXT_PLAYER)) {
-      return nextPlayerView;
     } else {
-      return resultView;
+      return playingView;
     }
   }
 
