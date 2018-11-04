@@ -31,14 +31,30 @@ public class Game implements GameInterface {
     return computerPlayer;
   }
 
-  //TODO: 根据 players 列表判断胜负，返回最后的胜利者
+
   @Override
-  public Player getWinner() {
-    if (new Random().nextBoolean()) {
-      return computerPlayer;
-    } else {
-      return players.get(new Random().nextInt(players.size()));
+  public int getWinner() {
+    int maxvalue = computerPlayer.getCardSum();
+    int winner = -1;
+    //-1代表电脑玩家
+    if (maxvalue > 21) {
+      for (Player player : players) {
+        if (player.getCardSum() <= 21) {
+          maxvalue = player.getCardSum();
+          winner = player.getUserId();
+          break;
+        }
+      }
     }
+    for (Player player : players)
+    {
+      if(player.getCardSum() > maxvalue && player.getCardSum() <= 21)
+      {
+        maxvalue = player.getCardSum();
+         winner = player.getUserId();
+      }
+    }
+   return winner;
   }
 
   //TODO: 根据胜负情况与玩家投入的钱（money on desk）输出 delta 金额数组

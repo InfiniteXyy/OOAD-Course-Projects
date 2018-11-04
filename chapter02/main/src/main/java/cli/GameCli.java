@@ -70,6 +70,11 @@ public class GameCli {
 
       // 赌博现场
       while (player.isDrawing()) {
+        if(player.getCardSum() > 21) {
+          player.setStopDrawing();
+          System.out.println("超过21了！\n手牌和：" + player.getCardSum());
+          break;
+        }
         System.out.println("玩家" + player.getUserId() + "：你是否要抽牌？1 代表抽牌");
         if (scanner.next().equals("1")) {
           game.drawCardForPlayer(player);
@@ -89,8 +94,8 @@ public class GameCli {
     for (Player player : players) {
       System.out.println("玩家" + player.getUserId() + "的结果：" + player.getCardSum());
     }
-    Player winner = game.getWinner();
-    System.out.println("最后的赢家是：玩家" + winner.getUserId());
+    int winner = game.getWinner();
+    System.out.println("最后的赢家是：玩家" + winner);
 
     // 发钱现场
     br();

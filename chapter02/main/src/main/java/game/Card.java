@@ -1,6 +1,9 @@
 package game;
 
-public class Card {
+public class
+
+
+Card {
 
   private static final int SPADE = 0;
   private static final int HEART = 1;
