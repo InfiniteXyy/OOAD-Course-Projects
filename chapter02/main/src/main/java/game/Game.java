@@ -61,10 +61,19 @@ public class Game implements GameInterface {
   @Override
   public int[] getDeltaMoney() {
     int[] delta = new int[players.size()];
-    Random random = new Random();
+
     int i = 0;
+    int change = 0;
     for (Player player : players) {
-      delta[i++] = random.nextInt(10);
+     if (player.getUserId() == getWinner())
+     {
+       change = player.getMoneyOnDesk();
+     }
+     else {
+       change = 0 - player.getMoneyOnDesk();
+     }
+     delta[i] = change;
+     i++;
     }
     return delta;
   }

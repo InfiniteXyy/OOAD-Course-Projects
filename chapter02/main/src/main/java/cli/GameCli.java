@@ -68,6 +68,7 @@ public class GameCli {
       }
       System.out.println("你投入了 " + putMoney + " 元");
 
+
       // 赌博现场
       while (player.isDrawing()) {
         if(player.getCardSum() > 21) {
