@@ -1,6 +1,7 @@
 package gui.view;
 
 import gui.common.GlobalFont;
+import gui.store.Action;
 import gui.store.State;
 import gui.store.Store;
 import java.awt.GridBagConstraints;
@@ -15,8 +16,8 @@ public class ControlPanel extends JPanel {
   public ControlPanel() {
     setLayout(new GridBagLayout());
     GridBagConstraints c = new GridBagConstraints();
-    JLabel logo = new JLabel("21 game", SwingConstants.CENTER);
-    logo.setFont(GlobalFont.H1());
+    JLabel logo = new JLabel("21 GAME", SwingConstants.CENTER);
+    logo.setFont(GlobalFont.H2());
     c.fill = GridBagConstraints.BOTH;
     c.weighty = 1;
     c.weightx = 0.5;
@@ -24,26 +25,22 @@ public class ControlPanel extends JPanel {
     c.gridy = 0;
     add(logo, c);
 
+    State state = Store.getInstance().state;
     JButton startBtn = new JButton("开始");
-    Store.getInstance().subscribe(() -> {
-      startBtn.setText(!Store.getInstance()
-          .state.stage.equals(State.STAGE_READY) ? "暂停" : "开始");
-    });
+    Store.getInstance().subscribe(Action.TYPE_STAGE,
+        () -> startBtn.setText(!state.stage.equals(State.STAGE_READY) ? "结束" : "开始"));
     startBtn.addActionListener(e -> {
-      Store.getInstance().dispatch("START_GAME");
+      if (state.stage.equals(State.STAGE_READY)) {
+        Store.getInstance().dispatch(Action.stage("START_GAME"));
+      } else {
+        Store.getInstance().dispatch(Action.stage("END_GAME"));
+
+      }
     });
     c.weighty = 1;
     c.weightx = 0.5;
     c.gridx = 1;
     c.gridy = 0;
     add(startBtn, c);
-
-    JButton breakBtn = new JButton("结束");
-    breakBtn.addActionListener(e -> Store.getInstance().dispatch("END_GAME"));
-    c.weighty = 1;
-    c.weightx = 0.5;
-    c.gridx = 2;
-    c.gridy = 0;
-    add(breakBtn, c);
   }
 }

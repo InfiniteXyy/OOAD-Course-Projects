@@ -1,5 +1,7 @@
 package gui.view;
 
+import game.Card;
+import gui.store.Action;
 import gui.store.Store;
 import gui.view.components.Button;
 import gui.view.components.CardView;
@@ -23,12 +25,13 @@ public class DrawingView extends JPanel {
   public DrawingView() {
     setBackground(Color.decode("#44617b"));
     continueDrawBtn = new Button(16, 400, "抽牌", () -> {
-      store.dispatch("ADD_MY_CARD");
+      store.dispatch(Action.game("ADD_MY_CARD"));
     });
     quitDrawBtn = new Button(132, 400, "放弃", () -> {
-      store.dispatch("QUIT_DRAW");
+      store.dispatch(Action.game("QUIT_DRAW"));
     });
     addButtonClickListener();
+    store.subscribe(Action.TYPE_GAMING, this::repaint);
   }
 
   private void addButtonClickListener() {
@@ -60,9 +63,9 @@ public class DrawingView extends JPanel {
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
     List<CardView> myCards = new ArrayList<>();
-    List<Integer> stateMe = store.state.game.getCurrentPlayer().getCards();
+    List<Card> stateMe = store.state.curPlayer.getCards();
     for (int i = 0; i < stateMe.size(); i++) {
-      myCards.add(new CardView(i, 1, stateMe.get(i)));
+      myCards.add(new CardView(i, 1, stateMe.get(i).getValue()));
     }
     Graphics2D g2 = (Graphics2D) g;
     for (CardView cardView : myCards) {

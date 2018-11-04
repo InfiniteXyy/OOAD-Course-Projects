@@ -1,37 +1,23 @@
 package game;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class Game implements GameInterface {
 
-  private boolean isGaming;
   private List<Player> players;
   private ComputerPlayer computerPlayer;
-  private int curPlayerIndex;
   private Deck deck;
 
   private Game() {
-    isGaming = true;
-    players = new ArrayList<>();
     this.deck = new Deck();
     computerPlayer = new ComputerPlayer();
     computerPlayer.fillCards(deck);
   }
 
-  private void initPlayers(int num) {
-    assert num >= 1;
-    for (int i = 0; i < num; i++) {
-      players.add(new Player());
-    }
-    curPlayerIndex = 0;
-  }
-
-
-  public static Game createGame(int playerNum) {
+  public static Game createGame(List<Player> players) {
     Game game = new Game();
-    game.initPlayers(playerNum);
+    game.players = players;
     return game;
   }
 
@@ -41,38 +27,31 @@ public class Game implements GameInterface {
   }
 
   @Override
-  public void stopDrawingForPlayer(Player player) {
-    player.setStopDrawing();
-  }
-
-  @Override
-  public Player getCurrentPlayer() {
-    return players.get(curPlayerIndex);
-  }
-
-  @Override
   public ComputerPlayer getComputerPlayer() {
     return computerPlayer;
   }
 
+  //TODO: 根据 players 列表判断胜负，返回最后的胜利者
   @Override
-  public boolean nextPlayer() {
-    if (curPlayerIndex + 1 == players.size()) {
-      this.isGaming = false;
+  public Player getWinner() {
+    if (new Random().nextBoolean()) {
+      return computerPlayer;
     } else {
-      curPlayerIndex++;
+      return players.get(new Random().nextInt(players.size()));
     }
-    return this.isGaming;
   }
 
-  // 如果所有玩家都超 21 了，或者所有人类玩家都选择结束，就 isGaming = false;
+  //TODO: 根据胜负情况与玩家投入的钱（money on desk）输出 delta 金额数组
   @Override
-  public boolean judgeGame() {
-    return new Random().nextBoolean();
+  public int[] getDeltaMoney() {
+    int[] delta = new int[players.size()];
+    Random random = new Random();
+    int i = 0;
+    for (Player player : players) {
+      delta[i++] = random.nextInt(10);
+    }
+    return delta;
   }
 
-  @Override
-  public boolean isGaming() {
-    return this.isGaming;
-  }
+
 }

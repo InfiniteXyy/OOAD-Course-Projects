@@ -13,8 +13,8 @@ class Deck {
     // init with cards
   }
 
-  int drawCard() {
-    return random.nextInt(13);
+  Card drawCard() {
+    return new Card(random.nextInt(4), random.nextInt(13) + 1);
   }
 
 }

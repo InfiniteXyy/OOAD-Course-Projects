@@ -7,13 +7,24 @@ public class Player {
 
   private static int _ID = 0;
   private int userId;
-  private List<Integer> cards;
+  private List<Card> cards;
   private boolean isDrawing;
+  private int money;
+  private int moneyOnDesk;
 
-  Player() {
+  public Player() {
     this.userId = _ID++;
     cards = new ArrayList<>();
     isDrawing = true;
+    money = 10; // 初始为石原里美
+  }
+
+  public void addMoney(int money) {
+    this.money += money;
+  }
+
+  public int getMoney() {
+    return money;
   }
 
   public int getUserId() {
@@ -25,23 +36,36 @@ public class Player {
   }
 
 
-  public List<Integer> getCards() {
+  public List<Card> getCards() {
     return cards;
   }
 
   public int getCardSum() {
     int result = 0;
-    for (int temp : cards) {
-      result += temp;
+    for (Card temp : cards) {
+      result += temp.getValue();
     }
     return result;
   }
 
-  void addCard(int card) {
+  void addCard(Card card) {
     this.cards.add(card);
   }
 
-  void setStopDrawing() {
+  public void setStopDrawing() {
     isDrawing = false;
+  }
+
+  public void reset() {
+    this.cards.clear();
+    this.isDrawing = true;
+  }
+
+  public int getMoneyOnDesk() {
+    return moneyOnDesk;
+  }
+
+  public void setMoneyOnDesk(int moneyOnDesk) {
+    this.moneyOnDesk = moneyOnDesk;
   }
 }

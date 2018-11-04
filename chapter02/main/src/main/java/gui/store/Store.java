@@ -2,7 +2,9 @@ package gui.store;
 
 import game.Game;
 import game.Player;
+import gui.view.components.GameConfigDialog;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,13 +12,13 @@ import java.util.Map;
 // game.Game 类即为 reducer
 public class Store {
 
-  public final static String STAGE_LISTENER = "stage_listener";
   private static Store store = new Store();
   private Map<String, List<Runnable>> listeners;
 
   public Store() {
     this.listeners = new HashMap<>();
-    this.listeners.put(STAGE_LISTENER, new ArrayList<>());
+    this.listeners.put(Action.TYPE_STAGE, new ArrayList<>());
+    this.listeners.put(Action.TYPE_GAMING, new ArrayList<>());
     this.state = new State();
   }
 
@@ -32,52 +34,58 @@ public class Store {
     return () -> this.listeners.get(type).remove(listener);
   }
 
-  public Runnable subscribe(Runnable listener) {
-    return subscribe(STAGE_LISTENER, listener);
+
+  public void dispatch(Action action) {
+    System.out.println(action);
+    switch (action.type) {
+      case Action.TYPE_GAMING:
+        handleGameActions(action.action);
+        break;
+      case Action.TYPE_STAGE:
+        handleStageActions(action.action);
+        break;
+    }
+
   }
 
-
-  public void dispatch(String action) {
-    if (this.state.stage.equals(State.STAGE_READY)) {
-      switch (action) {
-        case "START_GAME":
-          this.state.game = Game.createGame(1);
-          this.state.stage = State.STAGE_DRAWING;
-          break;
-        default:
-          break;
-      }
-    } else if (this.state.stage.equals(State.STAGE_DRAWING)) {
-      Game game = this.state.game;
-      Player player = game.getCurrentPlayer();
-      switch (action) {
-        case "ADD_MY_CARD":
-          game.drawCardForPlayer(player);
-          break;
-        case "QUIT_DRAW":
-          game.stopDrawingForPlayer(player);
-          if (!game.nextPlayer()) {
-            // judge game
-            this.state.gameResult = game.judgeGame();
-            this.state.stage = State.STAGE_GAME_RESULT;
-          } else {
-            this.state.stage = State.STAGE_NEXT_PLAYER;
-          }
-          break;
-        default:
-          break;
-      }
-    } else if (this.state.stage.equals(State.STAGE_NEXT_PLAYER)) {
-      switch (action) {
-        case "NEXT_TURN":
-          this.state.stage = State.STAGE_DRAWING;
-      }
+  private void handleStageActions(String action) {
+    switch (action) {
+      case "START_GAME":
+        this.state.players = Arrays.asList(new Player(), new Player());
+        this.state.game = Game.createGame(this.state.players);
+        this.state.stage = State.STAGE_DRAWING;
+        new GameConfigDialog().setVisible(true);
+        break;
+      case "END_GAME":
+        this.state.game = null;
+        this.state.players = null;
+        this.state.stage = State.STAGE_READY;
+        break;
+      case "NEXT_TURN":
+        this.state.stage = State.STAGE_NEXT_PLAYER;
+      default:
+        break;
     }
-    if (action.equals("END_GAME")) {
-      this.state.stage = State.STAGE_READY;
+    for (Runnable listener : listeners.get(Action.TYPE_STAGE)) {
+      listener.run();
     }
+  }
 
-    for (Runnable listener : listeners.get(STAGE_LISTENER)) {
+  private void handleGameActions(String action) {
+    Game game = this.state.game;
+    Player player = this.state.curPlayer;
+    switch (action) {
+      case "ADD_MY_CARD":
+        game.drawCardForPlayer(player);
+        break;
+      case "QUIT_DRAW":
+
+        this.handleStageActions("");
+        break;
+      default:
+        break;
+    }
+    for (Runnable listener : listeners.get(Action.TYPE_GAMING)) {
       listener.run();
     }
   }
