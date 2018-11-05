@@ -39,7 +39,7 @@ public class Store {
 
 
   public void dispatch(Action action) {
-    System.out.println(action);
+    // System.out.println(action);
     switch (action.type) {
       case Action.TYPE_GAMING:
         handleGameActions(action);

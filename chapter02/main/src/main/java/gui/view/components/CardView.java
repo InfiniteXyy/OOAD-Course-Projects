@@ -4,9 +4,9 @@ import game.Card;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Objects;
 import javax.imageio.ImageIO;
 
 public class CardView {
@@ -34,7 +34,8 @@ public class CardView {
   }
 
   private Image readPng(String cardName) throws IOException {
-    return ImageIO.read(new File("src/main/resources/deck/" + cardName + ".png"));
+    return ImageIO.read(Objects
+        .requireNonNull(getClass().getClassLoader().getResource("deck/" + cardName + ".png")));
   }
 
   public void draw(Graphics2D g) {
