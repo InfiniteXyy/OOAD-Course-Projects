@@ -37,7 +37,7 @@ public class MainControlPanel extends JPanel {
     moneyButton.setVisible(false);
 
     Store.getInstance().subscribe(Action.TYPE_STAGE, () -> {
-      mainButton.setText(state.stage.equals(State.STAGE_READY) ? "再来一轮" : "结束");
+      mainButton.setText(state.stage.equals(State.STAGE_READY) ? "开始游戏" : "结束");
       moneyButton.setVisible(true);
     });
 

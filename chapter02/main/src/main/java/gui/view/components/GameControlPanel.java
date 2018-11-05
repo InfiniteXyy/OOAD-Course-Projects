@@ -68,7 +68,7 @@ public class GameControlPanel extends JPanel {
         label.setText("已经放弃抽牌");
         label.setForeground(GlobalColor.white);
       } else {
-        label.setText("爆牌了");
+        label.setText("玩家已经爆牌");
         label.setForeground(GlobalColor.red);
       }
       add(label, c);

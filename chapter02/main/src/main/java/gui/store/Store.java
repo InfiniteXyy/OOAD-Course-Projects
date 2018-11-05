@@ -82,6 +82,7 @@ public class Store {
         for (int i = 0; i < action.optionalInt; i++) {
           this.state.players.add(new Player());
         }
+        break;
       case "GAME_AGAIN":
         this.state.winner = null;
         this.state.game = Game.createGame(this.state.players);
@@ -89,7 +90,7 @@ public class Store {
           boolean hasSet = false;
           while (!hasSet) {
             try {
-              String text = JOptionPane.showInputDialog(null, "玩家" + p.getUserId() + "输入赌注");
+              String text = JOptionPane.showInputDialog(null, "玩家" + p.getUserId() + "输入赌注", "3");
               int num = Integer.parseInt(text);
               if (num < 0 || num > p.getMoney()) {
                 throw new Exception();
@@ -132,7 +133,6 @@ public class Store {
             JOptionPane.showMessageDialog(null, "胜利者是：玩家" + state.winner.getUserId(), "结果",
                 JOptionPane.PLAIN_MESSAGE);
           }
-          JOptionPane.showMessageDialog(null, "你爆牌啦", "通知", JOptionPane.PLAIN_MESSAGE);
         } else {
           game.drawCardForPlayer(player);
         }

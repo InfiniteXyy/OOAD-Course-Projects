@@ -1,5 +1,6 @@
 package gui.view.components;
 
+import game.ComputerPlayer;
 import game.Player;
 import gui.common.GlobalFont;
 import gui.store.Action;
@@ -10,10 +11,10 @@ import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.DefaultListCellRenderer;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 
 public class StatusPanel extends JPanel {
@@ -23,20 +24,37 @@ public class StatusPanel extends JPanel {
   public StatusPanel() {
     setLayout(new GridBagLayout());
     GridBagConstraints c = new GridBagConstraints();
-    JLabel info = new JLabel("游戏中", SwingConstants.CENTER);
-
-    info.setFont(GlobalFont.get("h3"));
+    JTextArea textInfo = new JTextArea(10, 9);
+    JScrollPane scroller = new JScrollPane(textInfo);
+    textInfo.setLineWrap(true);//启动自动换行
+    textInfo.setEditable(false);
+    textInfo.setFont(GlobalFont.get("h4"));
     store.subscribe(Action.TYPE_ALL, () -> {
-      String s;
-      if (store.state.winner == null) {
-        s = "游戏中";
-      } else {
-        s = "恭喜玩家" + store.state.winner.getUserId() + "！";
+      StringBuilder s;
+      s = new StringBuilder("游戏中\n");
+      if (store.state.game != null) {
+        ComputerPlayer computer = store.state.game.getComputerPlayer();
+        if (store.state.winner == null) {
+          s.append(String.format("电脑：%s ...\n\n", computer.getCards()));
+        } else {
+          s.append(String.format("电脑：%s\n -> %d\n", computer.getAllCards(), computer.getCardSum()));
+        }
+        for (Player player : store.state.players) {
+          s.append(String.format("玩家%d：%s\n", player.getUserId(), player.getCards()));
+          if (!player.isDrawing()) {
+            s.append(" -> ").append(player.getCardSum());
+          }
+          s.append("\n");
+        }
+        if (store.state.winner != null) {
+          s.append("恭喜玩家").append(store.state.winner.getUserId()).append("！");
+        }
       }
-      info.setText(s);
+      textInfo.setText(s.toString());
     });
 
     JList<Object> playerJList = new JList<>(store.state.players.toArray());
+    playerJList.setEnabled(false);
     store.subscribe(Action.TYPE_SWITCH, () -> {
       if (store.state.players != null) {
         playerJList.setListData(store.state.players.toArray());
@@ -48,10 +66,12 @@ public class StatusPanel extends JPanel {
     playerJList.addMouseListener(new MouseAdapter() {
       @Override
       public void mousePressed(MouseEvent e) {
-        super.mousePressed(e);
-        JList list = (JList) e.getSource();
-        int index = list.locationToIndex(e.getPoint());
-        store.dispatch(new Action(Action.TYPE_SWITCH, "SET_PLAYER", index));
+        if (store.state.winner != null) {
+          super.mousePressed(e);
+          JList list = (JList) e.getSource();
+          int index = list.locationToIndex(e.getPoint());
+          store.dispatch(new Action(Action.TYPE_SWITCH, "SET_PLAYER", index));
+        }
       }
     });
     c.fill = GridBagConstraints.BOTH;
@@ -59,7 +79,7 @@ public class StatusPanel extends JPanel {
     c.gridy = 0;
     c.weighty = 0.3;
     c.weightx = 1.0;
-    add(info, c);
+    add(scroller, c);
     c.gridy = 1;
     c.weightx = 1.0;
     c.weighty = 0.7;
@@ -81,7 +101,5 @@ public class StatusPanel extends JPanel {
       }
       return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
     }
-
-
   }
 }
