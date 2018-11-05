@@ -35,6 +35,7 @@ public class Game implements GameInterface {
   @Override
   public Player getWinner() {
     int maxvalue = computerPlayer.getCardSum();
+    computerPlayer.setStopDrawing();
     int winner = -1;
     //-1代表电脑玩家
     if (maxvalue > 21) {

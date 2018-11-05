@@ -2,7 +2,6 @@ package game;
 
 public class
 
-
 Card {
 
   private static final int SPADE = 0;
@@ -12,6 +11,8 @@ Card {
   private static final String[] suitEmoji = {"♠", "♥", "♦", "♣"};
   private static final String[] suit = {"S", "H", "D", "C"};
   private static final String[] resouseId = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "T", "J",
+      "Q", "K"};
+  private static final String[] valueID = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J",
       "Q", "K"};
   private int type;
   private int value;
@@ -44,6 +45,6 @@ Card {
 
   @Override
   public String toString() {
-    return getSuit(true) + value;
+    return getSuit(true) + valueID[getValue() - 1];
   }
 }

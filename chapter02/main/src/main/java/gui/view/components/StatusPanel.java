@@ -35,14 +35,14 @@ public class StatusPanel extends JPanel {
       if (store.state.game != null) {
         ComputerPlayer computer = store.state.game.getComputerPlayer();
         if (store.state.winner == null) {
-          s.append(String.format("电脑：\n%s ...\n\n", Player.showCards(computer.getCards(), false)));
+          s.append(String.format("电脑：\n%s ...\n\n", computer.showCards()));
         } else {
-          s.append(String.format("电脑：%s\n\n", Player.showCards(computer.getAllCards(), true)));
+          s.append(String.format("电脑：%s\n\n", computer.showCards()));
         }
         for (Player player : store.state.players) {
           s.append(
               String.format("玩家%d：(赌注%d)\n%s\n\n", player.getUserId(), player.getMoneyOnDesk(),
-                  Player.showCards(player.getCards(), !player.isDrawing())));
+                  player.showCards()));
         }
         if (store.state.winner != null) {
           s.append("恭喜玩家").append(

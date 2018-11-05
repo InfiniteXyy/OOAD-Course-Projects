@@ -42,10 +42,22 @@ public class Player {
 
   public int getCardSum() {
     int result = 0;
+    int num_A = 0;
     for (Card temp : cards) {
       result += temp.getValue();
+      if (temp.getValue() == 1) {
+        num_A++;
+      }
     }
-    return result;
+    if (num_A >= 1) {
+      if (result + 10 > 21) {
+        return result;
+      } else {
+        return result + 10;
+      }
+    } else {
+      return result;
+    }
   }
 
   void addCard(Card card) {
@@ -69,16 +81,14 @@ public class Player {
     this.moneyOnDesk = moneyOnDesk;
   }
 
-  public static String showCards(List<Card> cards, boolean needSum) {
+  public String showCards() {
     StringBuilder sb = new StringBuilder();
-    int sum = 0;
-    for (Card card : cards) {
-      sum += card.getValue();
+    for (Card card : getCards()) {
       sb.append(card);
       sb.append(" ");
     }
-    if (needSum) {
-      sb.append("(").append(sum).append(")");
+    if (!isDrawing) {
+      sb.append("(").append(getCardSum()).append(")");
     }
     return sb.toString();
   }

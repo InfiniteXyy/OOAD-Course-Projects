@@ -12,10 +12,10 @@ public class ComputerPlayer extends Player {
 
   @Override
   public List<Card> getCards() {
-    return super.getCards().subList(0, 2);
-  }
-
-  public List<Card> getAllCards() {
-    return super.getCards();
+    if (isDrawing()) {
+      return super.getCards().subList(0, 2);
+    } else {
+      return super.getCards();
+    }
   }
 }
