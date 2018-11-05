@@ -3,7 +3,7 @@ package gui.store;
 import game.ComputerPlayer;
 import game.Game;
 import game.Player;
-import gui.view.components.GameConfigDialog;
+import gui.view.components.ConfigDialog;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -76,9 +76,10 @@ public class Store {
     }
     switch (action.action) {
       case "CONFIG_GAME":
-        GameConfigDialog.createDialog();
+        ConfigDialog.createDialog();
         break;
       case "START_GAME":
+        state.hasConfiged = true;
         this.state.players = new ArrayList<>();
         for (int i = 0; i < action.optionalInt; i++) {
           this.state.players.add(new Player());

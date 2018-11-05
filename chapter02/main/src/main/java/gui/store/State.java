@@ -17,11 +17,13 @@ public class State {
   public List<Player> players;
   public int[] deltaMoney;
   public int curPlayerIndex;
+  public boolean hasConfiged;
 
   State() {
     curPlayerIndex = 0;
     players = new ArrayList<>();
     this.stage = STAGE_READY;
+    hasConfiged = false;
   }
 
   public Player getCurPlayer() {

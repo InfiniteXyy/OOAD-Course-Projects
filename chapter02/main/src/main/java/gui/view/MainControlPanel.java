@@ -17,7 +17,6 @@ public class MainControlPanel extends JPanel {
 
   JButton mainButton;
   JButton moneyButton;
-  private boolean hasConfiged = false;
 
   public MainControlPanel() {
     setLayout(new GridBagLayout());
@@ -37,8 +36,10 @@ public class MainControlPanel extends JPanel {
     moneyButton.setVisible(false);
 
     Store.getInstance().subscribe(Action.TYPE_STAGE, () -> {
-      mainButton.setText(state.stage.equals(State.STAGE_READY) ? "开始游戏" : "结束");
-      moneyButton.setVisible(true);
+      if (state.hasConfiged) {
+        mainButton.setText(state.stage.equals(State.STAGE_READY) ? "开始游戏" : "结束");
+        moneyButton.setVisible(true);
+      }
     });
 
     moneyButton.addActionListener(e -> {
@@ -52,10 +53,7 @@ public class MainControlPanel extends JPanel {
 
     mainButton.addActionListener(e -> {
       if (state.stage.equals(State.STAGE_READY)) {
-        Store.getInstance().dispatch(Action.stage(!hasConfiged ? "CONFIG_GAME" : "GAME_AGAIN"));
-        if (!hasConfiged) {
-          hasConfiged = true;
-        }
+        Store.getInstance().dispatch(Action.stage(!state.hasConfiged ? "CONFIG_GAME" : "GAME_AGAIN"));
       } else {
         Store.getInstance().dispatch(Action.stage("END_GAME"));
       }
