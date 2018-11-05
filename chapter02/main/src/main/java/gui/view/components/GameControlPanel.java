@@ -66,7 +66,6 @@ public class GameControlPanel extends JPanel {
       c.gridy = 0;
       add(doubleBtn, c);
     } else {
-      System.out.println(1);
       c.insets = new Insets(20, 16, 20, 16);
       c.gridx = 0;
       c.gridy = 0;
