@@ -1,5 +1,6 @@
 package gui.view.components;
 
+import game.Card;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
@@ -11,26 +12,21 @@ import javax.imageio.ImageIO;
 public class CardView {
 
   private static HashMap<String, Image> cardImg = new HashMap<>();
-
-  // dev
-  private static final String[] TYPES = {"C", "D", "H", "S"};
-  private static final String[] NUMBER = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "T", "J",
-      "Q", "K"};
-
+  private Card card;
   private Rectangle cardBody;
-  private int value;
   private Image img;
 
-  public CardView(int gridX, int gridY, int value) {
-    this.value = value;
-    cardBody = new Rectangle(16 + gridX * 96, 16 + gridY * 200, 80, 120);
-    String cardName = TYPES[0] + NUMBER[value];
+  public CardView(int gridX, Card card) {
+    this.card = card;
+    int gridY = gridX / 6;
+    gridX = gridX % 6;
+    cardBody = new Rectangle(16 + gridX * 96, 160 + gridY * 160, 72, 110);
     try {
-      if (cardImg.containsKey(cardName)) {
-        this.img = cardImg.get(cardName);
+      if (cardImg.containsKey(card.getResourceName())) {
+        this.img = cardImg.get(card.getResourceName());
       } else {
-        this.img = readPng(cardName);
-        cardImg.put(cardName, img);
+        this.img = readPng(card.getResourceName());
+        cardImg.put(card.getResourceName(), img);
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -48,6 +44,5 @@ public class CardView {
   private void drawCard(Graphics2D g) {
     g.drawImage(img, cardBody.x, cardBody.y, cardBody.width, cardBody.height, null);
   }
-
 
 }

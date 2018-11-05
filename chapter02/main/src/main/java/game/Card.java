@@ -11,6 +11,8 @@ Card {
   private static final int CLUB = 3;
   private static final String[] suitEmoji = {"♠", "♥", "♦", "♣"};
   private static final String[] suit = {"S", "H", "D", "C"};
+  private static final String[] resouseId = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "T", "J",
+      "Q", "K"};
   private int type;
   private int value;
 
@@ -22,6 +24,10 @@ Card {
 
   public String getSuit(boolean needEmoji) {
     return needEmoji ? suitEmoji[type] : suit[type];
+  }
+
+  public String getResourceName() {
+    return getSuit(false) + resouseId[value - 1];
   }
 
   public void setType(int type) {

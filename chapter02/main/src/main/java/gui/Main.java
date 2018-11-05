@@ -2,9 +2,8 @@ package gui;
 
 import gui.store.Action;
 import gui.store.Store;
-import gui.view.ControlPanel;
 import gui.view.GameDesk;
-import gui.view.components.GameConfigDialog;
+import gui.view.MainControlPanel;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -12,8 +11,6 @@ import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 public class Main {
-  static GameConfigDialog dialog = new GameConfigDialog();
-
   private static void addComponentsToPane(Container pane) {
     pane.setLayout(new GridBagLayout());
     GridBagConstraints c = new GridBagConstraints();
@@ -26,7 +23,7 @@ public class Main {
     c.gridx = 0;
     c.gridy = 0;
     pane.add(gameDesk, c);
-    ControlPanel controlPanel = new ControlPanel();
+    MainControlPanel controlPanel = new MainControlPanel();
     c.fill = GridBagConstraints.BOTH;
     c.weighty = 1;
     c.gridx = 0;

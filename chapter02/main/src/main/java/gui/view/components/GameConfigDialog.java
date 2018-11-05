@@ -1,5 +1,7 @@
 package gui.view.components;
 
+import gui.store.Action;
+import gui.store.Store;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -23,7 +25,9 @@ public class GameConfigDialog extends JDialog {
     setContentPane(contentPane);
     setModal(true);
     getRootPane().setDefaultButton(buttonOK);
+    setLocationRelativeTo(null);
     setResizable(false);
+    textField1.setText("3");
 
     buttonOK.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
@@ -55,8 +59,17 @@ public class GameConfigDialog extends JDialog {
   }
 
   private void onOK() {
-    // add your code here
-    dispose();
+    try {
+      int num = Integer.parseInt(textField1.getText());
+      if (num < 0 || num > 10) {
+        throw new Exception();
+      }
+      Store.getInstance().dispatch(new Action(Action.TYPE_STAGE, "START_GAME", num));
+    } catch (Exception e) {
+      System.out.println("Wrong number");
+    } finally {
+      dispose();
+    }
   }
 
   private void onCancel() {
@@ -71,4 +84,9 @@ public class GameConfigDialog extends JDialog {
     System.exit(0);
   }
 
+  public static void createDialog() {
+    GameConfigDialog dialog = new GameConfigDialog();
+    dialog.pack();
+    dialog.setVisible(true);
+  }
 }
