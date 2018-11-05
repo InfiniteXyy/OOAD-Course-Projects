@@ -35,19 +35,19 @@ public class StatusPanel extends JPanel {
       if (store.state.game != null) {
         ComputerPlayer computer = store.state.game.getComputerPlayer();
         if (store.state.winner == null) {
-          s.append(String.format("电脑：%s ...\n\n", computer.getCards()));
+          s.append(String.format("电脑：\n%s ...\n\n", Player.showCards(computer.getCards(), false)));
         } else {
-          s.append(String.format("电脑：%s\n -> %d\n", computer.getAllCards(), computer.getCardSum()));
+          s.append(String.format("电脑：%s\n\n", Player.showCards(computer.getAllCards(), true)));
         }
         for (Player player : store.state.players) {
-          s.append(String.format("玩家%d：%s\n", player.getUserId(), player.getCards()));
-          if (!player.isDrawing()) {
-            s.append(" -> ").append(player.getCardSum());
-          }
-          s.append("\n");
+          s.append(
+              String.format("玩家%d：(赌注%d)\n%s\n\n", player.getUserId(), player.getMoneyOnDesk(),
+                  Player.showCards(player.getCards(), !player.isDrawing())));
         }
         if (store.state.winner != null) {
-          s.append("恭喜玩家").append(store.state.winner.getUserId()).append("！");
+          s.append("恭喜玩家").append(
+              store.state.winner instanceof ComputerPlayer ? "电脑" : store.state.winner.getUserId())
+              .append("！");
         }
       }
       textInfo.setText(s.toString());

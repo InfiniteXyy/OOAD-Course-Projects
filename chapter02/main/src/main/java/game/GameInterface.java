@@ -6,7 +6,7 @@ public interface GameInterface {
 
   Player getComputerPlayer();
 
-  int getWinner();
+  Player getWinner();
 
   int[] getDeltaMoney();
 }

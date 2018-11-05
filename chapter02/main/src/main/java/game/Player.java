@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Player {
 
-  private static int _ID = 0;
+  private static int _ID = 1;
   private int userId;
   private List<Card> cards;
   private boolean isDrawing;
@@ -67,5 +67,19 @@ public class Player {
 
   public void setMoneyOnDesk(int moneyOnDesk) {
     this.moneyOnDesk = moneyOnDesk;
+  }
+
+  public static String showCards(List<Card> cards, boolean needSum) {
+    StringBuilder sb = new StringBuilder();
+    int sum = 0;
+    for (Card card : cards) {
+      sum += card.getValue();
+      sb.append(card);
+      sb.append(" ");
+    }
+    if (needSum) {
+      sb.append("(").append(sum).append(")");
+    }
+    return sb.toString();
   }
 }

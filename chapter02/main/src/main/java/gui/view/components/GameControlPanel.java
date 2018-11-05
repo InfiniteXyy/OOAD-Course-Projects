@@ -15,6 +15,7 @@ public class GameControlPanel extends JPanel {
 
   private JButton continueDrawBtn;
   private JButton quitDrawBtn;
+  private JButton doubleBtn;
   private Store store = Store.getInstance();
   private JLabel label;
 
@@ -27,6 +28,8 @@ public class GameControlPanel extends JPanel {
     continueDrawBtn.addActionListener(e -> store.dispatch(Action.game("ADD_MY_CARD")));
     quitDrawBtn = new JButton("放弃");
     quitDrawBtn.addActionListener(e -> store.dispatch(Action.game("QUIT_DRAW")));
+    doubleBtn = new JButton("加倍");
+    doubleBtn.addActionListener(e -> store.dispatch(Action.game("DOUBLE_MONEY")));
     label = new JLabel("已经放弃抽牌");
     label.setFont(GlobalFont.H2());
     label.setForeground(GlobalColor.white);
@@ -59,6 +62,9 @@ public class GameControlPanel extends JPanel {
       c.gridx = 1;
       c.gridy = 0;
       add(quitDrawBtn, c);
+      c.gridx = 2;
+      c.gridy = 0;
+      add(doubleBtn, c);
     } else {
       System.out.println(1);
       c.insets = new Insets(20, 16, 20, 16);

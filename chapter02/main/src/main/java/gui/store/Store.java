@@ -1,5 +1,6 @@
 package gui.store;
 
+import game.ComputerPlayer;
 import game.Game;
 import game.Player;
 import gui.view.components.GameConfigDialog;
@@ -93,10 +94,12 @@ public class Store {
               String text = JOptionPane.showInputDialog(null, "玩家" + p.getUserId() + "输入赌注", "3");
               int num = Integer.parseInt(text);
               if (num < 0 || num > p.getMoney()) {
-                throw new Exception();
+                JOptionPane.showMessageDialog(null, "余额不足");
+                hasSet = false;
+              } else {
+                hasSet = true;
+                p.setMoneyOnDesk(num);
               }
-              hasSet = true;
-              p.setMoneyOnDesk(num);
             } catch (Exception e) {
               return;
             }
@@ -129,10 +132,7 @@ public class Store {
       case "ADD_MY_CARD":
         if (player.getCardSum() > 21) {
           player.setStopDrawing();
-          if (state.judgeGame()) {
-            JOptionPane.showMessageDialog(null, "胜利者是：玩家" + state.winner.getUserId(), "结果",
-                JOptionPane.PLAIN_MESSAGE);
-          }
+          handleGameActions(Action.game("QUIT_DRAW"));
         } else {
           game.drawCardForPlayer(player);
         }
@@ -146,10 +146,19 @@ public class Store {
           dispatch(new Action(Action.TYPE_SWITCH, "SET_PLAYER", this.state.getNextPlayer()));
         }
         if (state.judgeGame()) {
-          JOptionPane.showMessageDialog(null, "胜利者是：玩家" + state.winner.getUserId(), "结果",
-              JOptionPane.PLAIN_MESSAGE);
+          JOptionPane.showMessageDialog(null,
+              "胜利者是：玩家" + (state.winner instanceof ComputerPlayer ? "电脑"
+                  : state.winner.getUserId()),
+              "结果", JOptionPane.PLAIN_MESSAGE);
         }
         break;
+      case "DOUBLE_MONEY":
+        int money = player.getMoneyOnDesk();
+        if (player.getMoney() < 2 * money) {
+          JOptionPane.showMessageDialog(null, "余额不足");
+        } else {
+          player.setMoneyOnDesk(2 * player.getMoneyOnDesk());
+        }
       default:
         break;
     }

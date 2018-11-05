@@ -95,8 +95,8 @@ public class GameCli {
     for (Player player : players) {
       System.out.println("玩家" + player.getUserId() + "的结果：" + player.getCardSum());
     }
-    int winner = game.getWinner();
-    System.out.println("最后的赢家是：玩家" + winner);
+    Player winner = game.getWinner();
+    System.out.println("最后的赢家是：玩家" + winner.getUserId());
 
     // 发钱现场
     br();

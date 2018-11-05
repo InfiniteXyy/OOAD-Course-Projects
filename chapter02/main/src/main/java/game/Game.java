@@ -1,13 +1,13 @@
 package game;
 
 import java.util.List;
-import java.util.Random;
 
 public class Game implements GameInterface {
 
   private List<Player> players;
   private ComputerPlayer computerPlayer;
   private Deck deck;
+  private int winnerId;
 
   private Game() {
     this.deck = new Deck();
@@ -33,7 +33,7 @@ public class Game implements GameInterface {
 
 
   @Override
-  public int getWinner() {
+  public Player getWinner() {
     int maxvalue = computerPlayer.getCardSum();
     int winner = -1;
     //-1代表电脑玩家
@@ -46,15 +46,19 @@ public class Game implements GameInterface {
         }
       }
     }
-    for (Player player : players)
-    {
-      if(player.getCardSum() > maxvalue && player.getCardSum() <= 21)
-      {
+    for (Player player : players) {
+      if (player.getCardSum() > maxvalue && player.getCardSum() <= 21) {
         maxvalue = player.getCardSum();
-         winner = player.getUserId();
+        winner = player.getUserId();
       }
     }
-   return winner;
+    winnerId = winner;
+    for (Player player : players) {
+      if (player.getUserId() == winnerId) {
+        return player;
+      }
+    }
+    return computerPlayer;
   }
 
   //TODO: 根据胜负情况与玩家投入的钱（money on desk）输出 delta 金额数组
@@ -65,15 +69,13 @@ public class Game implements GameInterface {
     int i = 0;
     int change = 0;
     for (Player player : players) {
-     if (player.getUserId() == getWinner())
-     {
-       change = player.getMoneyOnDesk();
-     }
-     else {
-       change = 0 - player.getMoneyOnDesk();
-     }
-     delta[i] = change;
-     i++;
+      if (player.getUserId() == winnerId) {
+        change = player.getMoneyOnDesk();
+      } else {
+        change = 0 - player.getMoneyOnDesk();
+      }
+      delta[i] = change;
+      i++;
     }
     return delta;
   }
