@@ -51,7 +51,7 @@ public class GameCli {
 
   private void playOneGame() {
     br();
-    Game game = Game.createGame(players);
+    Game game = Game.Companion.createGame(players);
     for (Player player : players) {
       // 收钱，初始化
       player.reset();

@@ -87,7 +87,7 @@ public class Store {
         break;
       case "GAME_AGAIN":
         this.state.winner = null;
-        this.state.game = Game.createGame(this.state.players);
+        this.state.game = Game.Companion.createGame(this.state.players);
         for (Player p : this.state.players) {
           boolean hasSet = false;
           while (!hasSet) {
