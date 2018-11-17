@@ -16,14 +16,15 @@ class PlayArea : View() {
 
     override val root = vbox {
         alignment = Pos.CENTER
+        fitToParentSize()
         button("Animate").action {
             left = !left
             sequentialTransition {
                 timeline {
-                    keyframe(0.5.seconds) {
+                    keyframe(0.75.seconds) {
                         keyvalue(
                             myEllipse.translateXProperty(),
-                            if (left) 400.0 else 20.0,
+                            if (left) 300.0 else 20.0,
                             interpolator = Interpolator.EASE_BOTH
                         )
                     }
