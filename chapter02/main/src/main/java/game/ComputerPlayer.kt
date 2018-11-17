@@ -1,21 +1,25 @@
 package game
 
-import java.util.*
+import kotlin.math.min
 
-open class ComputerPlayer : Player() {
-    override var cards: MutableList<Card> = ArrayList()
-        get() {
-            val cards = super.cards
-            return if (isDrawing) {
-                cards.subList(0, minOf(cards.size, 2))
-            } else {
-                cards
-            }
-        }
-
-    fun fillCards(deck: Deck) {
-        while (this.cardSum <= 17) {
+class ComputerPlayer : Player() {
+    internal fun fillCards(deck: Deck) {
+        while (super.cardSum <= 17) {
             this.addCard(deck.drawCard())
+        }
+    }
+
+    override fun showCards(): String {
+        val showCards = if (isDrawing) {
+            cards.subList(0, min(cards.size, 2))
+        } else {
+            cards
+        }
+        val cardsInfo = showCards.joinToString(separator = " ")
+        return if (isDrawing) {
+            cardsInfo
+        } else {
+            "$cardsInfo($cardSum)"
         }
     }
 }

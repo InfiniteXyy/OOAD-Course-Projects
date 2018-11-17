@@ -4,7 +4,7 @@ import java.util.*
 
 open class Player {
     val userId: Int = _ID++
-    open var cards: MutableList<Card> = ArrayList()
+    open val cards: MutableList<Card> = ArrayList()
     var isDrawing: Boolean = true
         private set
     var money: Int = 10
@@ -19,7 +19,7 @@ open class Player {
                 val sum = cards.sumBy { it.value }
                 when (sum) {
                     !in 0..21 -> sum
-                    else -> sum
+                    else -> sum + 10
                 }
             }
         }
@@ -41,7 +41,7 @@ open class Player {
         this.isDrawing = true
     }
 
-    fun showCards(): String {
+    open fun showCards(): String {
         val cardsInfo = cards.joinToString(separator = " ")
         return if (isDrawing) {
             cardsInfo

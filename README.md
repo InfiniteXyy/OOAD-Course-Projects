@@ -11,4 +11,4 @@
  - [x] **21 点小游戏** [传送门](https://github.com/InfiniteXyy/OOAD-Course/tree/master/chapter02)
     - Java Swing 前端框架
     - 用 Java 模仿 Redux 尝试前端的解耦
- - [x] **弹球小游戏** [传送门](https://github.com/InfiniteXyy/OOAD-Course/tree/master/chapter03)
+ - [x] **弹球小游戏** [开发中](https://github.com/InfiniteXyy/OOAD-Course/tree/master/chapter03)
