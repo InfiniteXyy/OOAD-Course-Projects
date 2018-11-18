@@ -4,16 +4,19 @@ import ballgame.physics.Newton.G
 import javafx.geometry.Bounds
 import javafx.scene.paint.Color
 import javafx.scene.shape.Ellipse
-import kotlin.math.abs
 
-class Ball(private var vx: Double, private var vy: Double) : Ellipse(10.0, 10.0, 10.0, 10.0) {
+class Ball(
+    private var vx: Double,
+    private var vy: Double,
+    private var px: Double,
+    private var py: Double
+) : Ellipse(px, py, 10.0, 10.0) {
 
     init {
         this.fill = Color.DARKGRAY
     }
 
-    fun updatePosition(elapsedTime: Long) {
-        val elapsedSeconds = elapsedTime / 18_000_000.0
+    fun updatePosition(elapsedSeconds: Long) {
         this.vy += G * elapsedSeconds
         this.centerX = this.centerX + vx * elapsedSeconds
         this.centerY = this.centerY + vy * elapsedSeconds

@@ -1,9 +1,11 @@
 package ballgame.views
 
 import ballgame.app.Styles
+import ballgame.controllers.Store
 import tornadofx.*
 
 class MainView : View("Play the ball") {
+    private val store: Store by inject()
     override val root = borderpane {
         addClass(Styles.root)
         top {
@@ -14,7 +16,10 @@ class MainView : View("Play the ball") {
                     item("Save")
                 }
                 menu("Map") {
-                    item("Edit new map")
+                    item("Edit map").action {
+                        store.toggleMapEditing(true)
+                        ToolboxView().openWindow()
+                    }
                     item("Import map")
                     item("Map Setting")
                 }

@@ -8,6 +8,8 @@ class Styles : Stylesheet() {
     companion object {
         val footer by cssclass()
         val root by cssclass()
+        val toolbox by cssclass()
+        val playDesk by cssclass()
     }
 
     init {
@@ -18,11 +20,18 @@ class Styles : Stylesheet() {
             star {
                 spacing = 10.px
             }
-            backgroundColor += Color.rgb(233, 233, 233);
+            backgroundColor += Color.rgb(233, 233, 233)
         }
         root {
             prefWidth = 350.px
             prefHeight = 600.px
+        }
+        toolbox {
+            prefWidth = 200.px
+            prefHeight = 400.px
+        }
+        playDesk {
+            backgroundColor += Color.WHITE
         }
     }
 }

@@ -1,39 +1,49 @@
 package ballgame.views
 
-import ballgame.controllers.Store
-import ballgame.models.Ball
-import javafx.animation.Animation
-import javafx.animation.AnimationTimer
-import tornadofx.*
 
-import javafx.beans.property.SimpleLongProperty
-import javafx.scene.paint.Color
+import ballgame.app.Styles
+import ballgame.controllers.Store
+import ballgame.models.MapConfig
+import javafx.animation.AnimationTimer
+import javafx.beans.property.BooleanProperty
+import javafx.scene.input.KeyEvent
 import javafx.scene.shape.Rectangle
+import tornadofx.*
 
 
 class PlayArea : View() {
-    private val ball = Ball(4.0, 0.1)
+    private val map = MapConfig()
     private val rec = Rectangle(60.0, 120.0, 30.0, 30.0)
-    val store: Store by inject()
+    private val store: Store by inject()
 
     override val root = pane {
+        addClass(Styles.playDesk)
+        val ball = map.ball
         children.addAll(ball, rec)
-        style {
-            backgroundColor += Color.WHITE
-        }
-        val animationTimer = object : AnimationTimer() {
-            val lastUpdateTime = SimpleLongProperty(0)
 
+        // Main game
+        val animationTimer = object : AnimationTimer() {
             override fun handle(now: Long) {
-                if (lastUpdateTime.get() > 0) {
-                    val elapsedTime = now - lastUpdateTime.get()
-                    ball.updatePosition(elapsedTime)
-                    ball.checkCollisions(boundsInLocal)
-                }
-                lastUpdateTime.set(now)
+                ball.updatePosition(1)
+                ball.checkCollisions(boundsInLocal)
             }
         }
-        animationTimer.start()
+
+        // Game start listener
+        store.gameRunning.addListener { ob ->
+            if (ob is BooleanProperty && ob.value) {
+                animationTimer.start()
+            } else {
+                animationTimer.stop()
+            }
+        }
     }
 
+    init {
+        keyboard {
+            addEventHandler(KeyEvent.KEY_PRESSED) {
+                println(it.code)
+            }
+        }
+    }
 }
