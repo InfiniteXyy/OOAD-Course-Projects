@@ -3,24 +3,24 @@ package ballgame.views
 import ballgame.app.Styles
 import tornadofx.*
 
-class MainView : View("玩个球") {
+class MainView : View("Play the ball") {
     override val root = borderpane {
         addClass(Styles.root)
         top {
             menubar {
-                menu("游戏") {
-                    item("新建")
-                    item("打开")
-                    item("保存")
+                menu("Game") {
+                    item("New...")
+                    item("Open...")
+                    item("Save")
                 }
-                menu("地图") {
-                    item("新建游戏地图")
-                    item("导入地图")
-                    item("设置")
+                menu("Map") {
+                    item("Edit new map")
+                    item("Import map")
+                    item("Map Setting")
                 }
-                menu("帮助") {
-                    item("关于")
-                    item("检查更新")
+                menu("Help") {
+                    item("About")
+                    item("Check for updates...")
                 }
             }
         }

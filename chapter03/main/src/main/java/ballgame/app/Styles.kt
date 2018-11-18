@@ -21,7 +21,7 @@ class Styles : Stylesheet() {
             backgroundColor += Color.rgb(233, 233, 233);
         }
         root {
-            prefWidth = 300.px
+            prefWidth = 350.px
             prefHeight = 600.px
         }
     }

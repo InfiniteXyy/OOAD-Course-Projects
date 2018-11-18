@@ -1,38 +1,36 @@
 package ballgame.views
 
-import javafx.animation.Interpolator
-import javafx.geometry.Pos
-import javafx.scene.paint.Color
-import javafx.scene.shape.Ellipse
+import ballgame.models.Ball
 import tornadofx.*
 
+import javafx.animation.KeyFrame
+import javafx.animation.Timeline
+import javafx.event.EventHandler
+import javafx.geometry.Bounds
+import javafx.scene.paint.Color
+import javafx.scene.shape.Rectangle
+
+
 class PlayArea : View() {
-    private val myEllipse = Ellipse(50.0, 50.0, 20.0, 20.0)
-    var left = false
+    private val ball = Ball(4.0, 0.1)
+    private val rec = Rectangle(60.0, 120.0, 30.0, 30.0)
 
-    init {
-        myEllipse.fill = Color.DEEPPINK
-    }
-
-    override val root = vbox {
-        alignment = Pos.CENTER
-        fitToParentSize()
-        button("Animate").action {
-            left = !left
-            sequentialTransition {
-                timeline {
-                    keyframe(0.75.seconds) {
-                        keyvalue(
-                            myEllipse.translateXProperty(),
-                            if (left) 300.0 else 20.0,
-                            interpolator = Interpolator.EASE_BOTH
-                        )
-                    }
+    override val root = pane {
+        children.addAll(ball, rec)
+        style {
+            backgroundColor += Color.WHITE
+        }
+        val timeline = Timeline(
+            KeyFrame(
+                20.0.millis,
+                EventHandler {
+                    ball.move()
+                    ball.testCollide(boundsInLocal)
                 }
-            }
-        }
-        pane {
-            add(myEllipse)
-        }
+            )
+        )
+        timeline.cycleCount = Timeline.INDEFINITE
+        timeline.play()
     }
+
 }

@@ -10,7 +10,3 @@ class MainApp: App(MainView::class, Styles::class) {
         super.start(stage)
     }
 }
-
-fun main(args: Array<String>) {
-    launch<MainApp>(args)
-}

@@ -8,11 +8,11 @@ class Footer : View() {
     val store: Store by inject()
     override val root = hbox {
         addClass(Styles.footer)
-        label("准备就绪")
+        label("Ready")
         hbox {
             togglegroup {
-                togglebutton("button1")
-                togglebutton("button2")
+                togglebutton("Start")
+                togglebutton("Pause")
             }
         }
     }
