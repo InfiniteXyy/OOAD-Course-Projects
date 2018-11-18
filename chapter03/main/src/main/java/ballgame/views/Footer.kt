@@ -10,9 +10,11 @@ class Footer : View() {
         addClass(Styles.footer)
         label("Ready")
         hbox {
-            togglegroup {
-                togglebutton("Start")
-                togglebutton("Pause")
+            button("Start").setOnAction {
+                store.toggleGameRunning(true)
+            }
+            button("Pause").setOnAction {
+                store.toggleGameRunning(false)
             }
         }
     }
