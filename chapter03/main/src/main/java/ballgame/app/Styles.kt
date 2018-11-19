@@ -10,6 +10,7 @@ class Styles : Stylesheet() {
         val root by cssclass()
         val toolbox by cssclass()
         val playDesk by cssclass()
+        val editDesk by cssclass()
     }
 
     init {
@@ -27,11 +28,17 @@ class Styles : Stylesheet() {
             prefHeight = 600.px
         }
         toolbox {
-            prefWidth = 200.px
-            prefHeight = 400.px
+            prefWidth = 130.px
+            prefHeight = 270.px
+            padding = box(20.px, 10.px)
+            vgap = 10.px
+            hgap = 10.px
         }
         playDesk {
             backgroundColor += Color.WHITE
+        }
+        editDesk {
+            backgroundColor += Color.DARKSLATEGRAY
         }
     }
 }

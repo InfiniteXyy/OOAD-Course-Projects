@@ -2,10 +2,13 @@ package ballgame.views
 
 import ballgame.app.Styles
 import ballgame.controllers.Store
+import javafx.beans.property.BooleanProperty
+import javafx.stage.StageStyle
 import tornadofx.*
 
 class MainView : View("Play the ball") {
     private val store: Store by inject()
+    private val toolboxView = ToolboxView()
     override val root = borderpane {
         addClass(Styles.root)
         top {
@@ -16,9 +19,10 @@ class MainView : View("Play the ball") {
                     item("Save")
                 }
                 menu("Map") {
-                    item("Edit map").action {
-                        store.toggleMapEditing(true)
-                        ToolboxView().openWindow()
+                    item(stringBinding(store.mapEditing) {
+                        if (value) "Start Game" else "Edit map"
+                    }).action {
+                        store.toggleMapEditing()
                     }
                     item("Import map")
                     item("Map Setting")
@@ -31,5 +35,15 @@ class MainView : View("Play the ball") {
         }
         center(PlayArea::class)
         bottom(Footer::class)
+    }
+
+    init {
+        store.mapEditing.addListener { ob ->
+            if (ob is BooleanProperty && ob.value) {
+                toolboxView.openWindow(StageStyle.UTILITY)
+            } else {
+                toolboxView.close()
+            }
+        }
     }
 }

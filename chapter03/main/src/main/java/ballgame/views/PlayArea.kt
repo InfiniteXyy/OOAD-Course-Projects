@@ -6,26 +6,37 @@ import ballgame.controllers.Store
 import ballgame.models.MapConfig
 import javafx.animation.AnimationTimer
 import javafx.beans.property.BooleanProperty
+import javafx.beans.property.ObjectProperty
 import javafx.scene.input.KeyEvent
-import javafx.scene.shape.Rectangle
+import javafx.scene.shape.Shape
 import tornadofx.*
 
 
 class PlayArea : View() {
     private val map = MapConfig()
-    private val rec = Rectangle(60.0, 120.0, 30.0, 30.0)
     private val store: Store by inject()
+    private var lastShape: Shape? = null
+
 
     override val root = pane {
-        addClass(Styles.playDesk)
-        val ball = map.ball
-        children.addAll(ball, rec)
+        toggleClass(Styles.editDesk, store.mapEditing)
+        toggleClass(Styles.playDesk, store.mapEditing.not())
 
-        // Main game
+        // add ball
+        val ball = map.ball
+        children.add(ball)
+
         val animationTimer = object : AnimationTimer() {
+            // Main game refresh per frame
             override fun handle(now: Long) {
                 ball.updatePosition(1)
                 ball.checkCollisions(boundsInLocal)
+            }
+        }
+
+        setOnMouseMoved {
+            with(store.editShapeType.value) {
+                this?.followMouse(it)
             }
         }
 
@@ -37,6 +48,23 @@ class PlayArea : View() {
                 animationTimer.stop()
             }
         }
+
+        store.editShapeType.addListener { ob ->
+            if (ob is ObjectProperty<*> && ob.value != null) {
+                children.add(ob.value as Shape)
+                children.remove(lastShape)
+                lastShape = ob.value as Shape
+            }
+        }
+
+        store.mapEditing.addListener { ob ->
+            if (ob is BooleanProperty && ob.value) {
+
+            } else {
+                children.remove(lastShape)
+            }
+        }
+
     }
 
     init {

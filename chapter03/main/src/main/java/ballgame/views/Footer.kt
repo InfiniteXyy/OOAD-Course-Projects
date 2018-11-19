@@ -11,10 +11,6 @@ class Footer : View() {
     private val labelText = stringBinding(store.gameRunning) {
         if (value) "Game running" else "Ready for game"
     }
-    // binding button text
-    private val buttonText = stringBinding(store.gameRunning) {
-        if (value) "Pause" else "Start"
-    }
     override val root = borderpane {
         addClass(Styles.footer)
         left {
@@ -24,7 +20,18 @@ class Footer : View() {
             }
         }
         right {
-            button(buttonText).action { store.toggleGameRunning() }
+            hbox {
+                button {
+                    text { bind(stringBinding(store.gameRunning) { if (value) "Pause" else "Start" }) }
+                    action { store.toggleGameRunning() }
+                    removeWhen { booleanBinding(store.mapEditing) { value } }
+                }
+                button {
+                    text = "Save"
+                    action { store.toggleMapEditing() }
+                    removeWhen { booleanBinding(store.mapEditing) { value.not() } }
+                }
+            }
         }
     }
 }
