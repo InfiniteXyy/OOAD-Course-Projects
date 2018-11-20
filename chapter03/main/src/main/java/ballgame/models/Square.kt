@@ -5,7 +5,8 @@ import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 
 
-class Square : Rectangle(18.0, 18.0), ShapeType {
+class Square : Rectangle(18.0, 18.0), DraggableShape {
+    override var isDragging: Boolean = false
     override val typeText = "square"
 
     override fun followMouse(event: MouseEvent) {

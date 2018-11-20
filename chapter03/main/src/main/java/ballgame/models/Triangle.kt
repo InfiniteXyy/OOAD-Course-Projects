@@ -8,7 +8,9 @@ class Triangle : Polygon(
     0.0, 0.0,
     18.0, 0.0,
     0.0, 18.0
-), ShapeType {
+), DraggableShape {
+
+    override var isDragging: Boolean = true
 
     override val typeText = "circle"
 

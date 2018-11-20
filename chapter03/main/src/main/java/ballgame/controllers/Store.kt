@@ -1,14 +1,15 @@
 package ballgame.controllers
 
-import ballgame.models.ShapeType
+import ballgame.models.DraggableShape
+import ballgame.models.World
 import javafx.beans.property.SimpleBooleanProperty
-import javafx.beans.property.SimpleObjectProperty
 import tornadofx.*
 
 class Store : Controller() {
+    val map = World()
     val gameRunning = SimpleBooleanProperty(false)
     val mapEditing = SimpleBooleanProperty(false)
-    var editShapeType = SimpleObjectProperty<ShapeType>(null)
+    var draggingShape: DraggableShape? = null
 
     fun toggleGameRunning(running: Boolean = !gameRunning.value) = with(gameRunning) {
         set(running)
@@ -21,9 +22,9 @@ class Store : Controller() {
         set(editing)
     }
 
-    fun setEditShape(shape: ShapeType?) = with(editShapeType) {
-        set(shape)
-        println("toggle $value")
+    fun setEditShape(draggableShape: DraggableShape?) {
+        println(draggableShape)
+        draggingShape = draggableShape
     }
 }
 
