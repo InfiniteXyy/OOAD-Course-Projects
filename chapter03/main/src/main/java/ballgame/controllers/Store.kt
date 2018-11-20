@@ -1,6 +1,6 @@
 package ballgame.controllers
 
-import ballgame.models.DraggableShape
+import ballgame.models.shapes.DraggableShape
 import ballgame.models.World
 import javafx.beans.property.SimpleBooleanProperty
 import tornadofx.*
@@ -23,7 +23,8 @@ class Store : Controller() {
     }
 
     fun setEditShape(draggableShape: DraggableShape?) {
-        println(draggableShape)
+        if (draggableShape != null)
+            println(draggableShape)
         draggingShape = draggableShape
     }
 }

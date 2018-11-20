@@ -1,4 +1,4 @@
-package ballgame.models
+package ballgame.models.shapes
 
 import javafx.scene.input.MouseEvent
 

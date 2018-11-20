@@ -3,7 +3,8 @@ package ballgame.views
 
 import ballgame.app.Styles
 import ballgame.controllers.Store
-import ballgame.models.DraggableShape
+import ballgame.models.shapes.CollisibleShape
+import ballgame.models.shapes.DraggableShape
 import javafx.animation.AnimationTimer
 import javafx.beans.property.BooleanProperty
 import javafx.scene.shape.Shape
@@ -29,7 +30,8 @@ class PlayArea : View() {
             // Main game refresh per frame
             override fun handle(now: Long) {
                 ball.updatePosition(1)
-                ball.checkCollisions(boundsInLocal)
+                ball.checkBorderCollisions(boundsInLocal)
+                ball.checkCollisions(map.shapes)
             }
         }
 
