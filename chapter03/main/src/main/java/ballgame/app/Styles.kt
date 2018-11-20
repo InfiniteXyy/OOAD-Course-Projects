@@ -24,11 +24,11 @@ class Styles : Stylesheet() {
             backgroundColor += Color.rgb(233, 233, 233)
         }
         root {
-            prefWidth = 350.px
-            prefHeight = 600.px
+            prefWidth = 360.px
+            prefHeight = 598.px
         }
         toolbox {
-            prefWidth = 130.px
+            prefWidth = 110.px
             prefHeight = 270.px
             padding = box(20.px, 10.px)
             vgap = 10.px
@@ -38,7 +38,7 @@ class Styles : Stylesheet() {
             backgroundColor += Color.WHITE
         }
         editDesk {
-            backgroundColor += Color.DARKSLATEGRAY
+
         }
     }
 }

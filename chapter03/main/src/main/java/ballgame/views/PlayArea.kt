@@ -3,7 +3,6 @@ package ballgame.views
 
 import ballgame.app.Styles
 import ballgame.controllers.Store
-import ballgame.models.shapes.CollisibleShape
 import ballgame.models.shapes.DraggableShape
 import javafx.animation.AnimationTimer
 import javafx.beans.property.BooleanProperty
@@ -17,9 +16,15 @@ class PlayArea : View() {
 
 
     override val root = pane {
-        toggleClass(Styles.editDesk, store.mapEditing)
-        toggleClass(Styles.playDesk, store.mapEditing.not())
-
+        store.mapEditing.addListener { ob ->
+            if (ob is BooleanProperty && ob.value) {
+                addClass("editDesk")
+                removeClass(Styles.playDesk)
+            } else {
+                addClass(Styles.playDesk)
+                removeClass("editDesk")
+            }
+        }
         // add ball
         val ball = map.ball
         children.add(ball)
@@ -36,7 +41,7 @@ class PlayArea : View() {
         }
 
 
-        // Edit mouse listener
+        // move new shape
         setOnMouseMoved {
             if (store.mapEditing.value && store.draggingShape != null) {
                 with(store.draggingShape as Shape) {
@@ -44,17 +49,33 @@ class PlayArea : View() {
                         children.add(this)
                     (this as DraggableShape).followMouse(it)
                 }
-
             }
         }
 
+
+        // if edit mode
         // put shape on map
         setOnMousePressed {
             if (store.mapEditing.value && store.draggingShape != null) {
-                map.shapes.add(store.draggingShape as Shape)
+                if (it.isPrimaryButtonDown) {
+                    map.shapes.add(store.draggingShape as Shape)
+                } else {
+                    children.remove(store.draggingShape as Shape)
+                }
                 store.setEditShape(null)
             }
         }
+
+        // move shape
+        setOnMouseDragged {
+            if (store.mapEditing.value) {
+                if (it.target is DraggableShape) {
+                    val shape: DraggableShape = it.target as DraggableShape
+                    shape.followMouse(it)
+                }
+            }
+        }
+
 
         // Game start listener
         store.gameRunning.addListener { ob ->
