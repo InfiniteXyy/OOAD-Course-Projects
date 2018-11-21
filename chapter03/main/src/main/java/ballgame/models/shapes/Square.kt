@@ -8,7 +8,8 @@ import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 
 
-class Square(px: Double = 0.0, py: Double = 0.0) : Rectangle(shapeSize, shapeSize), DraggableShape, CollisibleShape {
+class Square(px: Double = 0.0, py: Double = 0.0) : Rectangle(shapeSize, shapeSize), Draggable,
+    Collisible {
 
     var centerX: Double
         get() = layoutX + shapeSize / 2
@@ -22,14 +23,22 @@ class Square(px: Double = 0.0, py: Double = 0.0) : Rectangle(shapeSize, shapeSiz
         }
 
     override fun isCollide(ball: Ball): Boolean {
-        if (distance(ball.centerX, ball.centerY, centerX, centerY) <= ball.radiusX + shapeSize / 2) {
+        if (distance(
+                ball.centerX + ball.vx,
+                ball.centerY + ball.vy,
+                centerX,
+                centerY
+            ) <= ball.radiusX + shapeSize / 2
+        ) {
             return true
         }
         return false
     }
 
-    override var isDragging: Boolean = false
-    override val typeText = "square"
+    companion object {
+        val typeText = "square"
+    }
+
     override fun followMouse(event: MouseEvent) {
         centerX = event.x
         centerY = event.y

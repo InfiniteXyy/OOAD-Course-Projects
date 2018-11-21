@@ -3,7 +3,6 @@ package ballgame.views
 import ballgame.app.Styles
 import ballgame.controllers.Store
 import ballgame.models.shapes.Circle
-import ballgame.models.shapes.DraggableShape
 import ballgame.models.shapes.Square
 import ballgame.models.shapes.Triangle
 import javafx.scene.control.Button
@@ -15,35 +14,33 @@ class ToolboxView : View("Toolbox") {
 
     private val store: Store by inject()
     private val shapes = listOf<Shape>(Square(), Circle(), Triangle())
-    private val toolButtons = shapes.map { ToolButton(it) }
-    override val root = flowpane {
-        addClass(Styles.toolbox)
-        // add buttons
-        toolButtons.forEach { add(it) }
+    private val toolButtons = shapes.map {
+        Button().apply {
+            add(it)
+            action {
+                store.setEditShape(it)
+            }
+        }
     }
+    override val root = vbox {
+        addClass(Styles.toolBox)
+        label("Shapes")
+        flowpane {
+            addClass(Styles.toolPane)
+            toolButtons.forEach { add(it) }
+        }
+        label("Controllers")
 
-    init {
-        // add onClick action for each button
-        toolButtons.forEach {
-            it.action {
-                store.setEditShape(it.editDraggableShape)
+        label("Other settings")
+        vbox {
+            button("ball") {
+                action {
+                    tornadofx.find(MainView::class).apply {
+                        toggleSettingBallWindow()
+                    }
+                }
             }
         }
     }
 }
 
-class ToolButton(private val myShape: Shape) : Button() {
-    init {
-        add(myShape)
-    }
-
-    val editDraggableShape: DraggableShape
-        get() {
-            return when (myShape) {
-                is Triangle -> Triangle()
-                is Square -> Square()
-                else -> Circle()
-            }
-
-        }
-}

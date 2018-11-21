@@ -1,6 +1,6 @@
 package ballgame.models
 
-import ballgame.models.shapes.CollisibleShape
+import ballgame.models.shapes.Collisible
 import ballgame.physics.Newton
 import ballgame.physics.Newton.G
 import javafx.geometry.Bounds
@@ -9,8 +9,8 @@ import javafx.scene.shape.Ellipse
 import javafx.scene.shape.Shape
 
 class Ball(
-        private var vx: Double,
-        private var vy: Double,
+        var vx: Double,
+        var vy: Double,
         private var px: Double,
         private var py: Double
 ) : Ellipse(px, py, 10.0, 10.0) {
@@ -34,7 +34,7 @@ class Ball(
         shapes.forEach {shape ->
             // 先判断是否碰撞
             // 再根据碰撞的切面改变速度
-            if ((shape as CollisibleShape).isCollide(this)) {
+            if ((shape as Collisible).isCollide(this)) {
                 vx *= -1
                 vy *= -1
             }
@@ -43,10 +43,10 @@ class Ball(
 
     fun checkBorderCollisions(bounds: Bounds) {
         if (centerX + vx >= bounds.maxX - radiusX || centerX + vx <= radiusX) {
-            vx *= -0.75
+            vx *= -1
         }
         if (centerY + vy >= bounds.maxY - radiusY || centerY + vy < radiusY) {
-            vy *= -0.75
+            vy *= -1
             if (vy in -0.1..0.1) {
                 vy = 0.0
                 onGround = true

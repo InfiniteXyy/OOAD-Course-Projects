@@ -11,17 +11,23 @@ class Triangle : Polygon(
     0.0, 0.0,
     shapeSize, 0.0,
     0.0, shapeSize
-), DraggableShape, CollisibleShape {
+), Draggable, Collisible {
     override fun isCollide(ball: Ball): Boolean {
-        if (distance(ball.centerX, ball.centerY, layoutX, layoutY) <= ball.radiusX + shapeSize / 2) {
+        if (distance(
+                ball.centerX + ball.vx,
+                ball.centerY + ball.vy,
+                layoutX,
+                layoutY
+            ) <= ball.radiusX + shapeSize / 2
+        ) {
             return true
         }
         return false
     }
 
-    override var isDragging: Boolean = true
-
-    override val typeText = "circle"
+    companion object {
+        val typeText = "triangle"
+    }
 
     override fun followMouse(event: MouseEvent) {
         layoutX = event.x

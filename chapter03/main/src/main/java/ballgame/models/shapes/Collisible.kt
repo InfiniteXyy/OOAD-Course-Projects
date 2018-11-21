@@ -2,6 +2,6 @@ package ballgame.models.shapes
 
 import ballgame.models.Ball
 
-interface CollisibleShape {
+interface Collisible {
     fun isCollide(ball: Ball): Boolean
 }

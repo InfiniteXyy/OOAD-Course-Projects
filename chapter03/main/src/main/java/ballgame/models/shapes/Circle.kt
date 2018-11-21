@@ -7,17 +7,23 @@ import javafx.scene.input.MouseEvent
 import javafx.scene.paint.Color
 import javafx.scene.shape.Ellipse
 
-class Circle : Ellipse(shapeSize / 2, shapeSize / 2), DraggableShape, CollisibleShape {
+class Circle : Ellipse(shapeSize / 2, shapeSize / 2), Draggable, Collisible {
     override fun isCollide(ball: Ball): Boolean {
-        if (distance(ball.centerX, ball.centerY, layoutX, layoutY) <= ball.radiusX + radiusX) {
+        if (distance(
+                ball.centerX + ball.vx,
+                ball.centerY + ball.vy,
+                layoutX,
+                layoutY
+            ) <= ball.radiusX + radiusX
+        ) {
             return true
         }
         return false
     }
 
-    override var isDragging: Boolean = false
-
-    override val typeText = "circle"
+    companion object {
+        val typeText = "circle"
+    }
 
     override fun followMouse(event: MouseEvent) {
         layoutX = event.x
