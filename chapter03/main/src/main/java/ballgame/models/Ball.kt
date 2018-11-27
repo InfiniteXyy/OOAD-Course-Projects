@@ -46,10 +46,10 @@ class Ball(px: Double, py: Double) : Ellipse(px, py, 10.0, 10.0) {
     fun checkCollisions(shapes: List<Shape>) {
         shapes.forEach { shape ->
             // 先判断是否碰撞
-            // 再根据碰撞的切面改变速度
+            // 再根据碰撞的切面改变速
             if (shape is Collisible && shape.isCollide(this)) {
-                vx *= -1
-                vy *= -1
+                vx *= (shape as Collisible).getCollideData(this).first * 0.999999
+                vy *= (shape as Collisible).getCollideData(this).second * 0.999999
             }
         }
     }

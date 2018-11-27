@@ -9,17 +9,16 @@ import javafx.scene.shape.Ellipse
 
 class Circle : Ellipse(shapeSize / 2, shapeSize / 2), Draggable, Collisible {
     override fun isCollide(ball: Ball): Boolean {
-        if (distance(
-                ball.centerX + ball.vx,
-                ball.centerY + ball.vy,
-                layoutX,
-                layoutY
-            ) <= ball.radiusX + radiusX
-        ) {
+        if (distance(ball.centerX + ball.vx, ball.centerY + ball.vy, layoutX, layoutY) <= ball.radiusX + radiusX) {
             return true
         }
         return false
     }
+
+    override fun getCollideData(ball: Ball): Pair<Double, Double> {
+        return -1.0 to -1.0
+    }
+
 
     companion object {
         val typeText = "circle"

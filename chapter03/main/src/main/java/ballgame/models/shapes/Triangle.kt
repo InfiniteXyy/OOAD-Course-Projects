@@ -24,6 +24,11 @@ class Triangle : Polygon(
         }
         return false
     }
+    override fun getCollideData(ball: Ball): Pair<Double, Double>
+    {
+
+        return -1.0 to -1.0
+    }
 
     companion object {
         val typeText = "triangle"

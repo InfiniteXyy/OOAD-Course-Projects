@@ -8,6 +8,10 @@ import javafx.scene.shape.Rectangle
 import javafx.scene.transform.Rotate
 
 class Flipper(val isLeft: Boolean = true) : Rectangle(80.0, 12.0), Draggable, Collisible {
+    override fun getCollideData(ball: Ball): Pair<Double, Double> {
+        return 0.0 to 0.0
+    }
+
     override fun isCollide(ball: Ball): Boolean {
         return false
     }
