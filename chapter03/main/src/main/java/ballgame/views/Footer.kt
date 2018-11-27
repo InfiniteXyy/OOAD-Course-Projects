@@ -7,10 +7,7 @@ import tornadofx.*
 
 class Footer : View() {
     private val store: Store by inject()
-    // binding label
-    private val labelText = stringBinding(store.gameRunning) {
-        if (value) "Game running" else "Ready for game"
-    }
+
     override val root = borderpane {
         addClass(Styles.footer)
         left {
@@ -19,7 +16,6 @@ class Footer : View() {
                 checkbox("show speed") {
                     bind(store.needSpeedLine)
                 }
-                label(labelText)
             }
         }
         right {

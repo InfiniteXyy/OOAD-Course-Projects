@@ -52,9 +52,11 @@ class World {
                 "flipper-r" -> Flipper(false)
                 else -> null
             }
-            newShape?.layoutX = shape[1].toDouble()
-            newShape?.layoutY = shape[2].toDouble()
-            shapes.add(newShape)
+            if (newShape != null) {
+                newShape.layoutX = shape[1].toDouble()
+                newShape.layoutY = shape[2].toDouble()
+                shapes.add(newShape)
+            }
         }
 
     }

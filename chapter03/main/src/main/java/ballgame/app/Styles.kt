@@ -37,7 +37,7 @@ class Styles : Stylesheet() {
             prefHeight = 598.px
         }
         toolBox {
-            prefWidth = 120.px
+            prefWidth = 180.px
             prefHeight = 260.px
             padding = box(0.px, 10.px)
             label {

@@ -1,5 +1,5 @@
 .editDesk {
   -fx-background-color: #fafafa,
-  linear-gradient(from 0px 0px to 10px 0px, repeat, #aaaaaa 5%, transparent 5%),
-  linear-gradient(from 0px 0px to 0px 10px, repeat, #aaaaaa 5%, transparent 5%);
+  linear-gradient(from 0px 0px to 10px 0px, repeat, #dddddd 6%, transparent 6%),
+  linear-gradient(from 0px 0px to 0px 10px, repeat, #dddddd 6%, transparent 6%);
 }

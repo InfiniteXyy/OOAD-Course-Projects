@@ -27,10 +27,12 @@ class MainView : View("Play the ball") {
                     item("New...").action {
                         confirm("reset", "It will remove all your game data!") {
                             store.world.reset(true)
+                            store.toggleGameRunning(false)
                         }
                     }
                     item("Key binding").action {
                         KeyBindingDialog().openModal(owner = null)
+                        store.toggleGameRunning(false)
                     }
                 }
                 menu("Map") {
@@ -40,6 +42,7 @@ class MainView : View("Play the ball") {
                         store.toggleMapEditing()
                     }
                     item("Import...").action {
+                        store.toggleGameRunning(false)
                         val files = chooseFile(filters = arrayOf(extFilter))
                         if (files.isNotEmpty()) {
                             val data = ConfigManager.loadConfig(files[0].absolutePath)
@@ -47,6 +50,7 @@ class MainView : View("Play the ball") {
                         }
                     }
                     item("Save...").action {
+                        store.toggleGameRunning(false)
                         val files = chooseFile(filters = arrayOf(extFilter), mode = FileChooserMode.Save)
                         if (files.isNotEmpty()) {
                             ConfigManager.saveConfig(files[0].absolutePath, store.world.shapeConfig)
@@ -55,6 +59,7 @@ class MainView : View("Play the ball") {
                 }
                 menu("Help") {
                     item("About").action {
+                        store.toggleGameRunning(false)
                         alert(
                             Alert.AlertType.NONE,
                             "About",
