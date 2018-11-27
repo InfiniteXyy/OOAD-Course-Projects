@@ -1,19 +1,20 @@
 package ballgame.controllers
 
 import ballgame.models.World
-import ballgame.models.shapes.Circle
 import ballgame.models.shapes.Draggable
-import ballgame.models.shapes.Square
-import ballgame.models.shapes.Triangle
 import javafx.beans.property.SimpleBooleanProperty
+import javafx.beans.property.SimpleStringProperty
 import javafx.scene.shape.Shape
 import tornadofx.*
 
 class Store : Controller() {
-    val map = World()
+    val world = World()
     val gameRunning = SimpleBooleanProperty(false)
     val mapEditing = SimpleBooleanProperty(false)
     var draggingShape: Draggable? = null
+    var needSpeedLine = SimpleBooleanProperty(false)
+    var leftFlipperKey = SimpleStringProperty("Q")
+    var rightFlipperKey = SimpleStringProperty("E")
 
     fun toggleGameRunning(running: Boolean = !gameRunning.value) = with(gameRunning) {
         set(running)
@@ -31,12 +32,7 @@ class Store : Controller() {
             println(shape)
             primaryStage.requestFocus()
         }
-        draggingShape = when (shape) {
-            is Circle -> Circle()
-            is Triangle -> Triangle()
-            is Square -> Square()
-            else -> null
-        }
+        draggingShape = shape as Draggable?
     }
 }
 

@@ -3,17 +3,30 @@ package ballgame.models
 import ballgame.models.shapes.Collisible
 import ballgame.physics.Newton
 import ballgame.physics.Newton.G
+import javafx.beans.property.SimpleDoubleProperty
 import javafx.geometry.Bounds
 import javafx.scene.paint.Color
 import javafx.scene.shape.Ellipse
 import javafx.scene.shape.Shape
 
-class Ball(
-        var vx: Double,
-        var vy: Double,
-        private var px: Double,
-        private var py: Double
-) : Ellipse(px, py, 10.0, 10.0) {
+class Ball(px: Double, py: Double) : Ellipse(px, py, 10.0, 10.0) {
+    val vxProperty = SimpleDoubleProperty(0.0)
+    val vyProperty = SimpleDoubleProperty(0.0)
+    var vx: Double
+        set(value) {
+            vxProperty.set(value)
+        }
+        get() {
+            return vxProperty.get()
+        }
+
+    var vy: Double
+        set(value) {
+            vyProperty.set(value)
+        }
+        get() {
+            return vyProperty.get()
+        }
 
     private var onGround = false
 
@@ -31,21 +44,21 @@ class Ball(
     }
 
     fun checkCollisions(shapes: List<Shape>) {
-        shapes.forEach {shape ->
+        shapes.forEach { shape ->
             // 先判断是否碰撞
             // 再根据碰撞的切面改变速度
-            if ((shape as Collisible).isCollide(this)) {
+            if (shape is Collisible && shape.isCollide(this)) {
                 vx *= -1
                 vy *= -1
             }
         }
     }
 
-    fun checkBorderCollisions(bounds: Bounds) {
-        if (centerX + vx >= bounds.maxX - radiusX || centerX + vx <= radiusX) {
+    fun checkBorderCollisions(maxX: Double, maxY: Double) {
+        if (centerX + vx >= maxX - radiusX || centerX + vx <= radiusX) {
             vx *= -1
         }
-        if (centerY + vy >= bounds.maxY - radiusY || centerY + vy < radiusY) {
+        if (centerY + vy >= maxY - radiusY || centerY + vy < radiusY) {
             vy *= -1
             if (vy in -0.1..0.1) {
                 vy = 0.0
@@ -53,4 +66,10 @@ class Ball(
             }
         }
     }
+
+    override fun toString(): String {
+        return "Ball(x=$centerX, y=$centerY, vx=$vx, vy=$vy)"
+    }
+
+
 }

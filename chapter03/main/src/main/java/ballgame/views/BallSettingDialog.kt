@@ -42,8 +42,8 @@ class BallSettingDialog : View("Ball Setting") {
                     val tempVx = vx.value.toDoubleOrNull()
                     val tempVy = vy.value.toDoubleOrNull()
                     if (tempVx != null && tempVy != null) {
-                        store.map.ball.vx = tempVx
-                        store.map.ball.vy = tempVy
+                        store.world.ball.vx = tempVx
+                        store.world.ball.vy = tempVy
                         isWrong.set(false)
                         close()
                     } else {
@@ -57,7 +57,7 @@ class BallSettingDialog : View("Ball Setting") {
     }
 
     fun rebind() {
-        vx.set(String.format("%.2f", store.map.ball.vx))
-        vy.set(String.format("%.2f", store.map.ball.vy))
+        vx.set(String.format("%.2f", store.world.ball.vx))
+        vy.set(String.format("%.2f", store.world.ball.vy))
     }
 }

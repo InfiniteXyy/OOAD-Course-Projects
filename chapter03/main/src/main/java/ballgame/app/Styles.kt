@@ -22,6 +22,11 @@ class Styles : Stylesheet() {
             padding = box(10.px)
             alignment = Pos.CENTER
             spacing = 20.px
+
+            checkBox {
+                fontSize = 12.px
+                textFill = Color.web("#4a4a4a")
+            }
             star {
                 spacing = 10.px
             }
@@ -32,8 +37,8 @@ class Styles : Stylesheet() {
             prefHeight = 598.px
         }
         toolBox {
-            prefWidth = 110.px
-            prefHeight = 270.px
+            prefWidth = 120.px
+            prefHeight = 260.px
             padding = box(0.px, 10.px)
             label {
                 textFill = Color.rgb(74, 74, 74)

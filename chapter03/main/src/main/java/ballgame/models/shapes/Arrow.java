@@ -3,7 +3,6 @@ package ballgame.models.shapes;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.Group;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
 public class Arrow extends Group {
@@ -14,8 +13,8 @@ public class Arrow extends Group {
     this(new MyLine(), new MyLine(), new MyLine());
   }
 
-  private static final double arrowLength = 6;
-  private static final double arrowWidth = 4;
+  private static final double arrowLength = 7.5;
+  private static final double arrowWidth = 5;
 
   private Arrow(MyLine line, MyLine arrow1, MyLine arrow2) {
     super(line, arrow1, arrow2);
@@ -118,7 +117,7 @@ public class Arrow extends Group {
     private MyLine() {
       super();
       this.setStyle("-fx-stroke: DARKGRAY");
-      this.setStrokeWidth(1.5);
+      this.setStrokeWidth(2.0);
     }
   }
 

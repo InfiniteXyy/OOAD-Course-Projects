@@ -16,9 +16,18 @@ import tornadofx.*
 
 class PlayArea : View() {
     private val store: Store by inject()
-    private val map = store.map
-    private val ballVelocityLine = Arrow()
-    private val flipper = Flipper()
+    private val world = store.world
+    private val ball = world.ball
+    private val shapes = world.shapes
+    private val ballVelocityLine = Arrow().apply {
+        this.startXProperty().bind(ball.centerXProperty())
+        this.startYProperty().bind(ball.centerYProperty())
+        this.endXProperty().bind(ball.centerXProperty() + ball.vxProperty * 7)
+        this.endYProperty().bind(ball.centerYProperty() + ball.vyProperty * 7)
+    }
+
+    var leftFlipperOn = false
+    var rightFlipperOn = false
 
     override val root = pane {
         store.mapEditing.addListener { ob ->
@@ -30,49 +39,58 @@ class PlayArea : View() {
                 removeClass("editDesk")
             }
         }
-        // add ball
-        val ball = map.ball
-        children.add(ball)
-        children.add(flipper)
-        children.addAll(map.shapes)
 
+        // bind shapes to panel children
+        bindChildren(shapes) { it }
 
+        store.needSpeedLine.addListener { ob ->
+            if (ob is BooleanProperty && ob.value) {
+                children.add(ballVelocityLine)
+            } else {
+                children.remove(ballVelocityLine)
+            }
+        }
         val animationTimer = object : AnimationTimer() {
             // Main game refresh per frame
             override fun handle(now: Long) {
-                ball.checkBorderCollisions(boundsInLocal)
-                ball.checkCollisions(map.shapes)
+                ball.checkBorderCollisions(360.0, 523.0)
+                ball.checkCollisions(shapes)
                 ball.updatePosition(1)
-                if (flipper.active) {
-                    flipper.updatePosition(1)
+                shapes.forEach {
+                    if (it is Flipper) {
+                        if (it.isLeft && leftFlipperOn) it.updatePosition(1)
+                        if (!it.isLeft && rightFlipperOn) it.updatePosition(1)
+                    }
                 }
             }
         }
 
-
+        // if edit mode
         // move new shape
         setOnMouseMoved {
-            if (store.mapEditing.value && store.draggingShape != null) {
-                with(store.draggingShape as Shape) {
-                    if (!children.contains(this))
-                        children.add(this)
-                    (this as Draggable).followMouse(it)
+            if (store.mapEditing.value) {
+                val draggedShape = store.draggingShape
+                if (draggedShape != null) {
+                    if (!shapes.contains(draggedShape as Shape)) shapes.add(draggedShape as Shape)
+                    (draggedShape as Draggable).followMouse(it)
                 }
             }
         }
 
 
         // if edit mode
-        // put shape on map
+        // put shape on world
         setOnMousePressed {
-            if (store.mapEditing.value && store.draggingShape != null) {
-                if (it.isPrimaryButtonDown) {
-                    map.shapes.add(store.draggingShape as Shape)
-                    store.draggingShape!!.adjustBox()
-                } else {
-                    children.remove(store.draggingShape as Shape)
+            if (store.mapEditing.value) {
+                val draggedShape = store.draggingShape
+                if (draggedShape != null) {
+                    if (it.isPrimaryButtonDown) {
+                        draggedShape.adjustBox()
+                    } else {
+                        shapes.remove(draggedShape as Shape)
+                    }
+                    store.setEditShape(null)
                 }
-                store.setEditShape(null)
             }
         }
 
@@ -91,25 +109,25 @@ class PlayArea : View() {
         store.gameRunning.addListener { ob ->
             if (ob is BooleanProperty && ob.value) {
                 animationTimer.start()
-                children.remove(ballVelocityLine)
             } else {
                 animationTimer.stop()
-                children.add(ballVelocityLine)
-                with(ballVelocityLine) {
-                    startX = ball.centerX
-                    startY = ball.centerY
-                    endX = ball.centerX + ball.vx * 10
-                    endY = ball.centerY + ball.vy * 10
-                }
             }
         }
     }
 
     val onKeyPressHandler: EventHandler<KeyEvent> = EventHandler {
-        flipper.active = true
+        if (it.code.getName() == store.leftFlipperKey.value) {
+            leftFlipperOn = true
+        } else if (it.code.getName() == store.rightFlipperKey.value) {
+            rightFlipperOn = true
+        }
     }
     val onKeyReleaseHandler: EventHandler<KeyEvent> = EventHandler {
-        flipper.active = false
+        if (it.code.getName() == store.leftFlipperKey.value) {
+            leftFlipperOn = false
+        } else if (it.code.getName() == store.rightFlipperKey.value) {
+            rightFlipperOn = false
+        }
     }
 
 }

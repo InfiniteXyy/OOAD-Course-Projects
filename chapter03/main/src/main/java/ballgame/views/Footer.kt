@@ -16,11 +16,19 @@ class Footer : View() {
         left {
             hbox {
                 style { alignment = Pos.CENTER_LEFT }
+                checkbox("show speed") {
+                    bind(store.needSpeedLine)
+                }
                 label(labelText)
             }
         }
         right {
             hbox {
+                button {
+                    text = "Reset"
+                    action { store.world.reset() }
+                    removeWhen { booleanBinding(store.gameRunning) { value } }
+                }
                 button {
                     text { bind(stringBinding(store.gameRunning) { if (value) "Pause" else "Start" }) }
                     action { store.toggleGameRunning() }
