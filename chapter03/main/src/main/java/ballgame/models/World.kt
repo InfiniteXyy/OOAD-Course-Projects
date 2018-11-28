@@ -16,6 +16,7 @@ class World {
         if (all) shapes.clear()
         ball.vx = 4.0
         ball.vy = 1.0
+        ball.onGround = false
         ball.centerX = 10.0
         ball.centerY = 10.0
         if (ball !in shapes)

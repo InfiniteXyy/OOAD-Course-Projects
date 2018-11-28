@@ -10,7 +10,7 @@ import kotlin.math.abs
 
 
 class Square(px: Double = 0.0, py: Double = 0.0) : Rectangle(shapeSize, shapeSize), Draggable,
-        Collisible {
+    Collisible {
 
     var centerX: Double
         get() = layoutX + shapeSize / 2
@@ -23,27 +23,38 @@ class Square(px: Double = 0.0, py: Double = 0.0) : Rectangle(shapeSize, shapeSiz
             layoutY = value - shapeSize / 2
         }
 
-    override fun isCollide(ball: Ball) = distance(0.0, ball.centerY + ball.vy, 0.0, centerY) <= ball.radiusX + shapeSize / 2
-            &&
-            distance(ball.centerX + ball.vx, 0.0, centerX, 0.0) <= ball.radiusX + shapeSize / 2
-
-    override fun getCollideData(ball: Ball): Pair<Double, Double> {
-        val xcontain = abs(ball.centerX + ball.vx - centerX) - (ball.radiusX + shapeSize/2)
-        val ycontain = abs(ball.centerY + ball.vy - centerY) - (ball.radiusX + shapeSize/2)
-
-
-        if (xcontain <= 0 && ycontain <= 0
-                && xcontain <= ycontain) {
-            return 1.0 to -1.0
+    override fun isCollide(ball: Ball): Boolean {
+        val closestPointX = when {
+            ball.centerX < layoutX -> layoutX
+            ball.centerX > layoutX + shapeSize -> layoutX + shapeSize
+            else -> ball.centerX
         }
-        if (xcontain <= 0 && ycontain <= 0 && xcontain >= ycontain) {
-            return -1.0 to 1.0
+
+        val closestPointY = when {
+            ball.centerY < layoutY -> layoutY
+            ball.centerY > layoutY + shapeSize -> layoutY + shapeSize
+            else -> ball.centerY
         }
-        return 1.0 to 1.0
+
+        return distance(
+            ball.centerX + ball.vx,
+            ball.centerY + ball.vy,
+            closestPointX,
+            closestPointY
+        ) <= ball.radiusX
     }
 
-    companion object {
-        val typeText = "square"
+    override fun getAfterCollideSpeed(ball: Ball): Pair<Double, Double> {
+        val xContain = abs(ball.centerX + ball.vx - centerX) - (ball.radiusX + shapeSize / 2)
+        val yContain = abs(ball.centerY + ball.vy - centerY) - (ball.radiusX + shapeSize / 2)
+
+        if (xContain <= 0 && yContain <= 0 && xContain <= yContain) {
+            return ball.vx to -ball.vy
+        }
+        if (xContain <= 0 && yContain <= 0 && xContain >= yContain) {
+            return -ball.vx to ball.vy
+        }
+        return ball.vx to ball.vy
     }
 
     override fun followMouse(event: MouseEvent) {

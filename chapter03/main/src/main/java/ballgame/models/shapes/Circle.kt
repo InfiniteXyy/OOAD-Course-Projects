@@ -1,8 +1,7 @@
 package ballgame.models.shapes
 
 import ballgame.models.Ball
-import ballgame.physics.distance
-import ballgame.physics.shapeSize
+import ballgame.physics.*
 import javafx.scene.input.MouseEvent
 import javafx.scene.paint.Color
 import javafx.scene.shape.Ellipse
@@ -15,8 +14,10 @@ class Circle : Ellipse(shapeSize / 2, shapeSize / 2), Draggable, Collisible {
         return false
     }
 
-    override fun getCollideData(ball: Ball): Pair<Double, Double> {
-        return -1.0 to -1.0
+    override fun getAfterCollideSpeed(ball: Ball): Pair<Double, Double> {
+        val dx = ball.centerX - layoutX
+        val dy = ball.centerY - layoutY
+        return reflectBy(ball.vx to ball.vy, dx to dy)
     }
 
 
