@@ -28,28 +28,15 @@ class Square(px: Double = 0.0, py: Double = 0.0) : Rectangle(shapeSize, shapeSiz
             distance(ball.centerX + ball.vx, 0.0, centerX, 0.0) <= ball.radiusX + shapeSize / 2
 
     override fun getCollideData(ball: Ball): Pair<Double, Double> {
-        if (distance(ball.centerX + ball.vx, ball.centerY + ball.vy, centerX, centerY) <= ball.radiusX) {
-            return -1.0 to -1.0
-        }
-        if (distance(0.0, ball.centerY + ball.vy, 0.0, centerY) <= ball.radiusX + shapeSize / 2
-                &&
-                distance(ball.centerX + ball.vx, 0.0, centerX, 0.0) <= ball.radiusX + shapeSize / 2
-                && distance(0.0, ball.centerY + ball.vy, 0.0, centerY) == distance(ball.centerX + ball.vx, 0.0, centerX, 0.0)
+        val xcontain = abs(ball.centerX + ball.vx - centerX) - (ball.radiusX + shapeSize/2)
+        val ycontain = abs(ball.centerY + ball.vy - centerY) - (ball.radiusX + shapeSize/2)
 
-        ) {
-            return -1.0 to -1.0
 
-        }
-        if (distance(0.0, ball.centerY + ball.vy, 0.0, centerY) <= ball.radiusX + shapeSize / 2
-                && distance(ball.centerX + ball.vx, 0.0, centerX, 0.0) <= ball.radiusX + shapeSize / 2
-                && distance(0.0, ball.centerY + ball.vy, 0.0, centerY) >= distance(ball.centerX + ball.vx, 0.0, centerX, 0.0)
-        ) {
+        if (xcontain <= 0 && ycontain <= 0
+                && xcontain <= ycontain) {
             return 1.0 to -1.0
         }
-        if (distance(ball.centerX + ball.vx, 0.0, centerX, 0.0) <= ball.radiusX + shapeSize / 2
-                && distance(ball.centerX + ball.vx, 0.0, centerX, 0.0) <= ball.radiusX + shapeSize / 2
-                && distance(0.0, ball.centerY + ball.vy, 0.0, centerY) <= distance(ball.centerX + ball.vx, 0.0, centerX, 0.0)
-        ) {
+        if (xcontain <= 0 && ycontain <= 0 && xcontain >= ycontain) {
             return -1.0 to 1.0
         }
         return 1.0 to 1.0
