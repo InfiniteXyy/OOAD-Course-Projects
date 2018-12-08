@@ -2,12 +2,13 @@ package ballgame.models
 
 import ballgame.models.shapes.Collisible
 import ballgame.models.shapes.Draggable
+import ballgame.models.shapes.GizmoShape
 import javafx.scene.input.MouseEvent
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 import javafx.scene.transform.Rotate
 
-class Flipper(val isLeft: Boolean = true) : Rectangle(80.0, 12.0), Draggable, Collisible {
+class Flipper(val isLeft: Boolean = true) : Rectangle(80.0, 12.0), GizmoShape {
     override fun getAfterCollideSpeed(ball: Ball): Pair<Double, Double> {
         return 0.0 to 0.0
     }

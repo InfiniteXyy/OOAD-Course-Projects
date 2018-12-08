@@ -37,8 +37,5 @@ operator fun Pair<Double, Double>.plus(another: Pair<Double, Double>): Pair<Doub
 fun main(args: Array<String>) {
     val a = 1.0 to 2.0
     val b = 3.0 to 4.0
-    println(b.normalize() * (a * b.normalize()))
-
-    val c = reflectBy(a, b)
-    println(c)
+    println(a * b)
 }

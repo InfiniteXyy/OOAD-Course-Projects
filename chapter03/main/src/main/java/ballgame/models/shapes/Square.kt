@@ -9,8 +9,7 @@ import javafx.scene.shape.Rectangle
 import kotlin.math.abs
 
 
-class Square(px: Double = 0.0, py: Double = 0.0) : Rectangle(shapeSize, shapeSize), Draggable,
-    Collisible {
+class Square(px: Double = 0.0, py: Double = 0.0) : Rectangle(shapeSize, shapeSize), GizmoShape {
 
     var centerX: Double
         get() = layoutX + shapeSize / 2
@@ -25,15 +24,15 @@ class Square(px: Double = 0.0, py: Double = 0.0) : Rectangle(shapeSize, shapeSiz
 
     override fun isCollide(ball: Ball): Boolean {
         val closestPointX = when {
-            ball.centerX < layoutX -> layoutX
-            ball.centerX > layoutX + shapeSize -> layoutX + shapeSize
-            else -> ball.centerX
+            ball.centerX + ball.vx < layoutX -> layoutX
+            ball.centerX + ball.vx > layoutX + shapeSize -> layoutX + shapeSize
+            else -> ball.centerX + ball.vx
         }
 
         val closestPointY = when {
-            ball.centerY < layoutY -> layoutY
-            ball.centerY > layoutY + shapeSize -> layoutY + shapeSize
-            else -> ball.centerY
+            ball.centerY + ball.vy < layoutY -> layoutY
+            ball.centerY + ball.vy > layoutY + shapeSize -> layoutY + shapeSize
+            else -> ball.centerY + ball.vy
         }
 
         return distance(

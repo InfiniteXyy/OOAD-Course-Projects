@@ -11,27 +11,29 @@ class Triangle : Polygon(
     0.0, 0.0,
     shapeSize, 0.0,
     0.0, shapeSize
-), Draggable, Collisible {
+), GizmoShape {
     override fun isCollide(ball: Ball): Boolean {
-        if (distance(
+        val closestPointX = when {
+            ball.centerX + ball.vx < layoutX -> layoutX
+            ball.centerX + ball.vx > layoutX + shapeSize -> layoutX + shapeSize
+            else -> ball.centerX + ball.vx
+        }
+
+        val closestPointY = when {
+            ball.centerY + ball.vy < layoutY -> layoutY
+            ball.centerY + ball.vy > layoutY + shapeSize -> layoutY + shapeSize
+            else -> ball.centerY + ball.vy
+        }
+        return distance(
                 ball.centerX + ball.vx,
                 ball.centerY + ball.vy,
-                layoutX,
-                layoutY
-            ) <= ball.radiusX + shapeSize / 2
-        ) {
-            return true
-        }
-        return false
+                closestPointX,
+                closestPointY
+        ) <= ball.radiusX
     }
     override fun getAfterCollideSpeed(ball: Ball): Pair<Double, Double>
     {
-
-        return -1.0 to -1.0
-    }
-
-    companion object {
-        val typeText = "triangle"
+        return ball.vx to ball.vy
     }
 
     override fun followMouse(event: MouseEvent) {

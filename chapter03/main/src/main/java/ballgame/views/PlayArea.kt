@@ -8,8 +8,11 @@ import ballgame.models.shapes.Arrow
 import ballgame.models.shapes.Draggable
 import javafx.animation.AnimationTimer
 import javafx.beans.property.BooleanProperty
+import javafx.beans.property.SimpleStringProperty
 import javafx.event.EventHandler
+import javafx.scene.Cursor
 import javafx.scene.input.KeyEvent
+import javafx.scene.layout.Pane
 import javafx.scene.shape.Shape
 import tornadofx.*
 
@@ -25,6 +28,7 @@ class PlayArea : View() {
         this.endXProperty().bind(ball.centerXProperty() + ball.vxProperty * 7)
         this.endYProperty().bind(ball.centerYProperty() + ball.vyProperty * 7)
     }
+    private val cursorTypeProperty = SimpleStringProperty("DEFAULT")
 
     var leftFlipperOn = false
     var rightFlipperOn = false
@@ -53,7 +57,7 @@ class PlayArea : View() {
         val animationTimer = object : AnimationTimer() {
             // Main game refresh per frame
             override fun handle(now: Long) {
-                ball.checkBorderCollisions(360.0, 523.0)
+                ball.checkBorderCollisions(layoutBounds.maxX, layoutBounds.maxY)
                 ball.checkCollisions(shapes)
                 ball.updatePosition(1)
                 shapes.forEach {
@@ -65,45 +69,11 @@ class PlayArea : View() {
             }
         }
 
-        // if edit mode
-        // move new shape
-        setOnMouseMoved {
-            if (store.mapEditing.value) {
-                val draggedShape = store.draggingShape
-                if (draggedShape != null) {
-                    if (!shapes.contains(draggedShape as Shape)) shapes.add(draggedShape as Shape)
-                    (draggedShape as Draggable).followMouse(it)
-                }
-            }
-        }
+        initCursor(this)
 
-
-        // if edit mode
-        // put shape on world
-        setOnMousePressed {
-            if (store.mapEditing.value) {
-                val draggedShape = store.draggingShape
-                if (draggedShape != null) {
-                    if (it.isPrimaryButtonDown) {
-                        draggedShape.adjustBox()
-                    } else {
-                        shapes.remove(draggedShape as Shape)
-                    }
-                    store.setEditShape(null)
-                }
-            }
-        }
-
-        // move shape
-        setOnMouseDragged {
-            if (store.mapEditing.value) {
-                if (it.target is Draggable) {
-                    val shape: Draggable = it.target as Draggable
-                    shape.followMouse(it)
-                }
-            }
-        }
-
+        initMoveEvent(this)
+        initPressEvent(this)
+        initDragEvent(this)
 
         // Game start listener
         store.gameRunning.addListener { ob ->
@@ -127,6 +97,98 @@ class PlayArea : View() {
             leftFlipperOn = false
         } else if (it.code.getName() == store.rightFlipperKey.value) {
             rightFlipperOn = false
+        }
+    }
+    private fun initCursor(pane: Pane) {
+        cursorTypeProperty.addListener { ob ->
+            pane.cursor = when ((ob as SimpleStringProperty).value) {
+                "OPEN_HAND" -> Cursor.OPEN_HAND
+                "CLOSED_HAND" -> Cursor.CLOSED_HAND
+                "DEFAULT" -> Cursor.DEFAULT
+                else -> Cursor.DEFAULT
+            }
+        }
+    }
+
+    private fun initMoveEvent(pane: Pane) {
+        // if edit mode
+        // move new shape
+        pane.setOnMouseMoved {
+            if (store.mapEditing.value) {
+                val draggedShape = store.draggingShape
+                if (draggedShape != null) {
+                    if (!shapes.contains(draggedShape as Shape)) shapes.add(draggedShape as Shape)
+                    (draggedShape as Draggable).followMouse(it)
+                }
+                if (it.target is Draggable) {
+                    cursorTypeProperty.set("OPEN_HAND")
+                } else {
+                    cursorTypeProperty.set("DEFAULT")
+                }
+            }
+        }
+    }
+
+    private fun initPressEvent(pane: Pane) {
+        var onPressedShape: Shape? = null
+        val contextMenu = contextmenu {
+            item("delete").action {
+                shapes.remove(onPressedShape)
+            }
+        }
+        // if edit mode
+        // put shape on world
+        pane.setOnMousePressed {
+            // if is in edit mode
+            if (store.mapEditing.value) {
+                val draggedShape = store.draggingShape
+                // adding new shape
+                if (draggedShape != null) {
+                    if (it.isPrimaryButtonDown) {
+                        draggedShape.adjustBox()
+                    } else {
+                        shapes.remove(draggedShape as Shape)
+                    }
+                    store.setEditShape(null)
+                } else {
+                    // removing target shape by RIGHT CLICK
+                    if (it.target is Draggable) {
+                        if (it.isSecondaryButtonDown) {
+                            onPressedShape = it.target as Shape
+                            contextMenu.show(pane, it.screenX, it.screenY)
+                        }
+                    } else {
+                        if (contextMenu.isShowing)
+                            contextMenu.hide()
+                    }
+
+                }
+            }
+        }
+    }
+
+    private fun initDragEvent(pane: Pane) {
+        pane.setOnDragDetected {
+            if (store.mapEditing.value && it.target is Draggable && it.isPrimaryButtonDown) {
+                pane.startFullDrag()
+                cursorTypeProperty.set("CLOSED_HAND")
+            }
+        }
+
+        // move shape
+        pane.setOnMouseDragged {
+            if (store.mapEditing.value && it.target is Draggable && it.isPrimaryButtonDown) {
+                val shape: Draggable = it.target as Draggable
+                shape.followMouse(it)
+            }
+        }
+
+        pane.setOnMouseDragReleased {
+            if (store.mapEditing.value && it.target is Draggable) {
+                val shape: Draggable = it.target as Draggable
+                shape.adjustBox()
+                cursorTypeProperty.set("OPEN_HAND")
+            }
         }
     }
 
