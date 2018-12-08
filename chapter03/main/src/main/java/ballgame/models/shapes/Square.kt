@@ -2,14 +2,15 @@ package ballgame.models.shapes
 
 import ballgame.models.Ball
 import ballgame.physics.distance
+import ballgame.physics.reflectBy
 import ballgame.physics.shapeSize
 import javafx.scene.input.MouseEvent
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
-import kotlin.math.abs
 
 
 class Square(px: Double = 0.0, py: Double = 0.0) : Rectangle(shapeSize, shapeSize), GizmoShape {
+    private var collideType = 0
 
     var centerX: Double
         get() = layoutX + shapeSize / 2
@@ -35,6 +36,15 @@ class Square(px: Double = 0.0, py: Double = 0.0) : Rectangle(shapeSize, shapeSiz
             else -> ball.centerY + ball.vy
         }
 
+        collideType = when {
+            closestPointX == layoutX || closestPointX == layoutX + shapeSize -> 0
+            closestPointY == layoutY || closestPointY == layoutY + shapeSize -> 1
+            else -> 0
+        }
+        if (collideType == 0 && closestPointY == layoutY || closestPointY == layoutY + shapeSize) {
+            collideType = 2
+        }
+
         return distance(
             ball.centerX + ball.vx,
             ball.centerY + ball.vy,
@@ -44,16 +54,15 @@ class Square(px: Double = 0.0, py: Double = 0.0) : Rectangle(shapeSize, shapeSiz
     }
 
     override fun getAfterCollideSpeed(ball: Ball): Pair<Double, Double> {
-        val xContain = abs(ball.centerX + ball.vx - centerX) - (ball.radiusX + shapeSize / 2)
-        val yContain = abs(ball.centerY + ball.vy - centerY) - (ball.radiusX + shapeSize / 2)
-
-        if (xContain <= 0 && yContain <= 0 && xContain <= yContain) {
-            return ball.vx to -ball.vy
+        return when (collideType) {
+            0 -> -ball.vx to ball.vy
+            1 -> ball.vx to -ball.vy
+            else -> {
+                val dx = ball.centerX - centerX
+                val dy = ball.centerY - centerY
+                return reflectBy(ball.vx to ball.vy, dx to dy)
+            }
         }
-        if (xContain <= 0 && yContain <= 0 && xContain >= yContain) {
-            return -ball.vx to ball.vy
-        }
-        return ball.vx to ball.vy
     }
 
     override fun followMouse(event: MouseEvent) {

@@ -8,16 +8,28 @@ fun distance(x1: Double, y1: Double, x2: Double, y2: Double): Double {
     return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2))
 }
 
+fun isCircleIntersectLineSeg(x: Double, y: Double, r: Double, x1: Double, y1: Double, x2: Double, y2: Double): Boolean {
+    val c = x to y
+    val l1 = x1 to y1
+    val l2 = x2 to y2
+    val v1 = c - l1
+    val len = (l2 - l1).vLength()
+    val v2 = (l2 - l1).normalize()
+    val u = v1 * v2
+
+    val (x0, y0) = when {
+        u <= 0 -> (x1 to y1)
+        u >= len -> (x2 to y2)
+        else -> x1 + v2.first * u to y1 + v2.second * u
+    }
+    return distance(x, y, x0, y0) <= r
+}
+
 fun reflectBy(a: Pair<Double, Double>, b: Pair<Double, Double>): Pair<Double, Double> {
     val u = b.normalize()
     val au = a * u
     val d = u * au
     return a - d * 2.0
-}
-
-fun distancePointToLine(p: Pair<Double, Double>, lp: Pair<Double, Double>, length: Double, angle: Double): Double {
-    val (x1, y1) = projPointOnLine(p, lp, angle)
-    return distance(x1, y1, p.first, p.second)
 }
 
 fun projPointOnLine(p: Pair<Double, Double>, lp: Pair<Double, Double>, angle: Double): Pair<Double, Double> {
