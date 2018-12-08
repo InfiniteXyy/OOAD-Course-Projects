@@ -11,6 +11,7 @@ import javafx.beans.property.BooleanProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.event.EventHandler
 import javafx.scene.Cursor
+import javafx.scene.control.ContextMenu
 import javafx.scene.input.KeyEvent
 import javafx.scene.layout.Pane
 import javafx.scene.shape.Shape
@@ -130,11 +131,8 @@ class PlayArea : View() {
     }
 
     private fun initPressEvent(pane: Pane) {
-        var onPressedShape: Shape? = null
-        val contextMenu = contextmenu {
-            item("delete").action {
-                shapes.remove(onPressedShape)
-            }
+        var contextMenu: ContextMenu = contextmenu {
+
         }
         // if edit mode
         // put shape on world
@@ -154,7 +152,11 @@ class PlayArea : View() {
                     // removing target shape by RIGHT CLICK
                     if (it.target is Draggable) {
                         if (it.isSecondaryButtonDown) {
-                            onPressedShape = it.target as Shape
+                            contextMenu = contextmenu {
+                                item("delete").action {
+                                    shapes.remove(it.target)
+                                }
+                            }
                             contextMenu.show(pane, it.screenX, it.screenY)
                         }
                     } else {

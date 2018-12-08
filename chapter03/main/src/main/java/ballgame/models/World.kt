@@ -59,6 +59,5 @@ class World {
                 shapes.add(newShape)
             }
         }
-
     }
 }
