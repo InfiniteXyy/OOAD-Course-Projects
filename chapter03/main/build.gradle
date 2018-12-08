@@ -31,4 +31,9 @@ compileTestKotlin {
     }
 }
 
-
+jar {
+    manifest {
+        attributes 'Main-Class': 'ballgame.app.MainAppKt'
+    }
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}
