@@ -15,3 +15,4 @@
      - Kotlin + TornadoFX
      - JavaFX
      - 尝试通过数据绑定来解耦
+ - [ ] **GoF 设计模式** [开发中](https://github.com/InfiniteXyy/OOAD-Course/tree/master/design-patterns)
